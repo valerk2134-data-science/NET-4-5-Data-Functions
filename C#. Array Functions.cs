@@ -9,12 +9,1685 @@ using System.Diagnostics;
 using AudioFileFunctions;
 using NetworkFunctionsNamespace;
 using FileFunctionsNamespace;
+using static ArrayFunctionsNamespace.ArrayFunctions;
 
 
 
 
 namespace ArrayFunctionsNamespace
 {
+
+
+
+    public static class Int32ArrayFunctions
+    {
+        /// <summary>
+        /// For generating random array.
+        /// </summary>
+        static Random _internal_random = new Random();
+
+
+
+        // template for code execution. Warsaw. Workplace. 2024-07-16 13-48. 
+        /*
+        float execution_time_ms_start = 0;
+        if (TimeExecutionShow == true)
+            {
+                execution_time_ms_start = (float)_time_execution.Elapsed.TotalMilliseconds;
+            }
+        if (TimeExecutionShow == true)
+            {
+                float execution_time_ms_stop = (float)_time_execution.Elapsed.TotalMilliseconds;
+                TimeExecutionMessage(nameof(function_name_here), execution_time_ms_stop - execution_time_ms_start);
+            }
+        */
+
+        /// <summary>       
+        /// Execution speed measurement. Set true to see the execution time in console.
+        /// </summary>
+        public static bool TimeExecutionShow
+        {
+            get
+            {
+                return _time_execution_bool;
+            }
+
+            set
+            {
+                if (value == true)
+                {
+                    _time_execution_bool = true;
+                    _time_execution.Start();
+                    return;
+                }
+                if (value == false)
+                {
+                    _time_execution_bool = false;
+                    _time_execution.Stop();
+                    _time_execution.Reset();
+                    return;
+
+                }
+            }
+
+            // <info>
+            // Warsaw. Workplace. 2024-07-16 13-48.
+            // </info>
+        }
+        static bool _time_execution_bool = false;
+        static Stopwatch _time_execution = new Stopwatch();
+        static Int32 _time_execution_count = 0;
+
+        static void TimeExecutionMessage(string function_name, float total_ms_passed)
+        {
+            _time_execution_count += 1;
+            Console.WriteLine(_time_execution_count.ToString() + ". " + DateTime.Now.ToString("HH:mm:ss") + " " + function_name +
+                " exectuion time: " + total_ms_passed.ToString("0.000") + " ms");
+        }
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// Written. 2023.11.08 15:39. Warsaw. Workplace. 
+        /// </summary>
+        /// Note. 2023.11.08 16:12. Warsaw. Workplace. 
+        /// Columns and Rows words to be used and all combinations can be 
+        /// descibed using it.
+        /// Letter description did not work good when
+        /// Int32[][] into 1 array by columns and by rows.
+        public static class Merge
+        {
+
+            /// <summary>
+            /// Merge two arrays Int32[] into one array Int32[]. <br></br>
+            /// Written. 2024.01.21 16:40. Warsaw. Hostel. 
+            /// </summary>
+            /// <param name="arr_1"></param>
+            /// <param name="arr_2"></param>
+            /// <returns></returns>
+            public static Int32[] A_B_To_C(Int32[] arr_1, Int32[] arr_2)
+            {
+                Int32[] arr_out = new Int32[arr_1.Length + arr_2.Length];
+                Array.Copy(arr_1, arr_out, arr_1.Length);
+                Array.Copy(arr_2, 0, arr_out, arr_1.Length, arr_2.Length);
+                return arr_out;
+            }
+
+            /// <summary>
+            /// Takes each Int32[m] from Int32[n][m] and makes one array Int32[nxm] <br></br>
+            /// <br></br>
+            /// Input: Int32[a][b] <br></br>
+            /// Output: Int32[c], c = axb <br></br>
+            /// </summary>
+            /// <param name="array_in"></param>
+            /// <returns></returns>
+            public static Int32[] AxB_To_C(Int32[][] array_in)
+            {
+                return ArrayFunctions.Merge.NxM_To_A(array_in);
+            }
+        }
+        /// <summary>
+        /// Written. 2023.11.05 16:41. Gdansk. Home. 
+        /// not tested. 2023.11.05 16:42. Gdansk. Home. 
+        /// </summary>
+        public static class Normilize
+        {
+            /// <summary>
+            /// Written. 2023.11.05 16:57. Gdansk. Home. 
+            /// Tested. Works. 2023.11.05 17:44. Gdansk. Home. 
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <param name="number_for_max_in_arr"></param>
+            /// <returns></returns>
+            public static Int32[] ScaleMaximumToNumber(Int32[] arr_in, UInt32 number_for_max_in_arr)
+            {
+                // check if input is correct
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return new Int32[0];
+                }
+                if (number_for_max_in_arr == 0)
+                {
+                    ReportFunctions.ReportError(ReportFunctions.ErrorMessage.Length_is_0);
+                }
+                // calculating normilize number.                   
+                float normlize_coeficient = (float)arr_in.Max() / (float)number_for_max_in_arr;
+                // making array for return
+                Int32[] arr_out = new Int32[arr_in.Length];
+                // devide each number in array
+                for (Int32 i = 0; i < arr_out.Length; i++)
+                {
+                    arr_out[i] = (int)((float)arr_in[i] / (float)normlize_coeficient);
+                }
+                // return array
+                return arr_out;
+            }
+        }
+        /// <summary>
+        /// Checks if Int32 array 1 contains Int32 array 2.
+        /// 2023.08.23 09:57. written.
+        /// 2023.08.23 09:57. tested. works.
+        /// /// </summary>
+        /// <param name="arr_search_in"></param>
+        /// <param name="arr_search"></param>
+        /// <returns></returns>
+        public static bool Contains(Int32[] arr_search_in, Int32[] arr_search)
+        {
+            return ArrayFunctions.Contains(arr_search_in, arr_search);
+        }
+        public static class Split
+        {
+            /// <summary>
+            /// Split Int32[] to Int32[n][], where n - required number of columns
+            /// 2023.08.23 10:00. written.
+            /// 2023.08.23 10:00. tested. works.
+            /// </summary>
+            /// <param name="array_in"></param>
+            /// <param name="columns_number"></param>
+            /// <param name="columns_length_equal"></param>
+            /// <returns></returns>
+            public static Int32[][] A_To_MxN(Int32[] array_in, Int32 columns_number, bool columns_length_equal = true)
+            {
+                return ArrayFunctions.Split.A_To_MxN(array_in, columns_number, columns_length_equal);
+            }
+        }
+
+        /// <summary>
+        /// Written. 2024.02.09 15:45. Warsaw. Workplace. 
+        /// </summary>
+        public static class Generate
+        {
+
+            /// <summary>
+            /// Generates Int32[][] with values that form Cone with Square base.
+            /// </summary>
+            /// <param name="array_size"></param>
+            /// <param name="cone_square_size"></param>
+            /// <param name="cone_max_value"></param>
+            /// <param name="points_for_half_value"></param>
+            /// <param name="cone_center_x"></param>
+            /// <param name="cone_center_y"></param>
+            /// <returns></returns>
+            public static Int32[][] ConeWithSquareBase(UInt32 array_size, UInt32 cone_max_value, UInt32 points_for_half_value, UInt32 cone_center_x, UInt32 cone_center_y, bool zero_is_min = true)
+            {
+                Int32[][] array_out = new Int32[array_size][];
+                Int32 value_decrease_per_point = (Int32)(cone_max_value / (points_for_half_value * 2));
+                // level by Y axis
+                Int32[] y_values = new Int32[array_size];
+                for (int i = (int)cone_center_y; i < array_size; i++)
+                {
+                    y_values[i] = (Int32)cone_max_value - value_decrease_per_point * (i - (int)cone_center_y);
+                }
+                for (int i = (int)cone_center_y; i >= 0; i--)
+                {
+                    y_values[i] = (Int32)cone_max_value - value_decrease_per_point * ((int)cone_center_y - i);
+                }
+                // level by X axis
+                Int32[] x_values = new Int32[array_size];
+                for (int i = (int)cone_center_x; i < array_size; i++)
+                {
+                    x_values[i] = (Int32)cone_max_value - value_decrease_per_point * (i - (int)cone_center_x);
+                }
+                for (int i = (int)cone_center_x; i >= 0; i--)
+                {
+                    x_values[i] = (Int32)cone_max_value - value_decrease_per_point * ((int)cone_center_x - i);
+                }
+                // filling array
+                for (int c = 0; c < array_size; c++)
+                {
+                    array_out[c] = new Int32[array_size];
+                    for (int r = 0; r < array_size; r++)
+                    {
+                        array_out[c][r] = x_values[r];
+                        if (x_values[r] > y_values[c])
+                        {
+                            array_out[c][r] = y_values[c];
+                        }
+                        if (zero_is_min == true)
+                        {
+                            if (array_out[c][r] < 0)
+                            {
+                                array_out[c][r] = 0;
+                            }
+                        }
+                    }
+                }
+                return array_out;
+
+                // Written. Warsaw. Workplace. 2024-07-16 14-12. 
+                // Tested. Works. Warsaw. Workplace. 2024-07-16 14-31. 
+                // Note. No trouble in generating at the border of the array.
+            }
+
+            /// <summary>
+            /// Written. 2024.02.09 15:51. Warsaw. Workplace. 
+            /// Tested. Works. 2024.02.09 15:54. Warsaw. Workplace. 
+            /// </summary>
+            /// <param name="numbers_num"></param>
+            /// <param name="element_value"></param>
+            /// <returns></returns>
+            public static Int32[] WithTheSameValue(Int32 numbers_num, Int32 element_value)
+            {
+                // note. word - identical. 2024.02.09 15:51. Warsaw. Workplace. 
+                Int32[] arr_out = new Int32[numbers_num];
+                for (Int32 i = 0; i < arr_out.Length; i++)
+                {
+                    arr_out[i] = element_value;
+                }
+                return arr_out;
+            }
+
+
+            /// <summary>
+            /// Generate Int32[] filled with random numbers
+            /// 2023.07.10 - 2023.07.20. 10 - 15 o'clock. written.
+            /// 2023.08.22 16:10. tested. works.
+            /// </summary>
+            /// <param name="numbers_num"></param>
+            /// <param name="min"></param>
+            /// <param name="max"></param>
+            /// <returns></returns>
+            public static Int32[] RandomMinMaxValue(Int32 numbers_num, Int32 min, Int32 max)
+            {
+                Int32[] arr_out = new Int32[numbers_num];
+                for (Int32 i = 0; i < arr_out.Length; i++)
+                {
+                    arr_out[i] = _internal_random.Next(min, max + 1);
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// Generate Int32[] filled with numbers from 0 to array length - 1 <br></br>
+            /// 2023.08.22 16:17. written. <br></br>
+            /// 2023.08.22 16:18. tested. works. <br></br>
+            /// </summary>
+            /// <param name="numbers_num"></param>
+            /// <returns>Array with element from 0 to length - 1. <br></br>
+            /// Can return array  with length is 0</returns>
+            public static Int32[] WithValueIncreasesBy1(Int32 numbers_num)
+            {
+                Int32[] arr_out = new Int32[numbers_num];
+                for (Int32 i = 0; i < arr_out.Length; i++)
+                {
+                    arr_out[i] = i;
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// Generate Int32[][] filled with random numbers
+            /// 2023.07.10 - 2023.07.20. 10 - 15 o'clock. written.
+            /// 2023.22.08 15:10. tested. works.
+            /// </summary>
+            /// <param name="numbers_num_x"></param>
+            /// <param name="numbers_num_y"></param>
+            /// <param name="min"></param>
+            /// <param name="max"></param>
+            /// <returns></returns>
+            public static Int32[][] RandomMinMaxValue(Int32 numbers_num_x, Int32 numbers_num_y, Int32 min, Int32 max)
+            {
+                Int32[][] arr_out = new Int32[numbers_num_x][];
+                for (Int32 i = 0; i < arr_out.Length; i++)
+                {
+                    arr_out[i] = new Int32[numbers_num_y];
+                    for (Int32 j = 0; j < arr_out[i].Length; j++)
+                    {
+                        arr_out[i][j] = _internal_random.Next(min, max + 1);
+                    }
+                }
+                return arr_out;
+            }
+            /// <summary>
+            ///  Generate Int32[][] filled with numbers starting from 0 to (Rows x Cols - 1)<br></br>
+            ///  2023.10.30 13:49. Written.
+            ///  2023.10.30 13:50.
+            /// </summary>
+            /// <param name="numbers_num_x"></param>
+            /// <param name="numbers_num_y"></param>
+            /// <returns></returns>
+            public static Int32[][] WithValueIncreasesBy1(Int32 numbers_num_x, Int32 numbers_num_y)
+            {
+                Int32[][] arr_out = new Int32[numbers_num_x][];
+                Int32 num_for_arr = 0;
+                for (Int32 i = 0; i < arr_out.Length; i++)
+                {
+                    arr_out[i] = new Int32[numbers_num_y];
+                    for (Int32 j = 0; j < arr_out[i].Length; j++)
+                    {
+                        arr_out[i][j] = num_for_arr;
+                        num_for_arr++;
+                    }
+                }
+                return arr_out;
+            }
+        }
+        /// <summary>
+        /// Accepts: char[]
+        /// 2023-07-26 13:15
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arr_in"></param>
+        /// <returns></returns>
+        public static Int32[] ConvertToInt32(char[] arr_in)
+        {
+            Int32[] arr_out = new Int32[arr_in.Length];
+            for (Int32 i = 0; i < arr_out.Length; i++)
+            {
+                arr_out[i] = (int)arr_in[i];
+            }
+            return arr_out;
+        }
+        /// <summary>
+        /// string is char[] and each char is 2 bytes
+        /// 2023-08-01 15:27
+        /// </summary>
+        /// <param name="str_in"></param>
+        /// <returns></returns>
+        public static Int16[] ConvertToInt16Array(string str_in)
+        {
+            Int16[] arr_out = Array.ConvertAll(str_in.ToArray(), CharToInt16);
+            Int16 CharToInt16(char char_in)
+            {
+                return (Int16)char_in;
+            }
+            return arr_out;
+        }
+        public static void ToConsole(Int32[] arr_1, Int32[] arr_2)
+        {
+            Type type = typeof(int);
+            Console.WriteLine("Array 1" + type.Name.ToString() + ". Length is " + arr_1.Length.ToString());
+            Console.WriteLine("Array 2" + type.Name.ToString() + ". Length is " + arr_2.Length.ToString());
+            Console.WriteLine();
+            string str_size_min = "";
+            str_size_min = arr_2.Min().ToString();
+            if (arr_1.Min() < arr_2.Min())
+            {
+                str_size_min = arr_1.Min().ToString();
+            }
+            string str_size_max = "";
+            str_size_max = arr_2.Max().ToString();
+            if (arr_1.Max() > arr_2.Max())
+            {
+                str_size_min = arr_1.Max().ToString();
+            }
+            string pad_str = "".PadRight(str_size_max.Length, ' '); ;
+            if (str_size_min.Length > str_size_max.Length)
+            {
+                pad_str = "".PadRight(str_size_min.Length, ' ');
+            }
+            for (Int32 i = 0; i < arr_1.Length; i++)
+            {
+                Console.WriteLine(arr_1[i].ToString().PadRight(pad_str.Length, ' ') +
+                    pad_str + arr_2[i].ToString().PadRight(pad_str.Length, ' '));
+            }
+            Console.WriteLine();
+        }
+        /// <summary>
+        /// Prints Int32[][] to console <br></br>
+        /// 2023.08.12 09:31. written. <br></br>
+        /// 2023.08.22 15:16. tested. works. <br></br>
+        /// Modified. Added parameter - spaces. Tested. Works.  2024.02.09 10:33. Warsaw. Workplace. 
+        /// </summary>
+        /// <param name="arr_in"></param>
+        public static void ToConsole(Int32[][] arr_in, UInt32 spaces_between_numbers = 3)
+        {
+            if (arr_in.Length == 0)
+            {
+                Console.WriteLine("Attention! Array is empty");
+                return;
+            }
+            Console.WriteLine("Array" + typeof(int).Name.ToString() + ". Length is " + arr_in.Length.ToString() + "x" + arr_in[0].Length.ToString());
+            Int32[] array_all_values = ArrayFunctions.Merge.NxM_To_A(arr_in);
+            string min_num = array_all_values.Min().ToString();
+            string max_num = array_all_values.Max().ToString();
+            Int32 pad_size = max_num.Length;
+            if (max_num.Length < min_num.Length)
+            {
+                pad_size = min_num.Length;
+            }
+            string[][] str_arr = TwoDimensions.Convert.ToStringArray.ToDecimal(arr_in);
+            str_arr = StringArray.Pad.Right(str_arr, pad_size);
+            string str_for_console = StringArray.Convert.ToFileString(str_arr, "".PadRight((int)spaces_between_numbers, ' '));
+            // 2024.01.21 16:52. Warsaw. Hostel. 
+            // There were Writeline. FileString adds "\r\n" at the last line therefore
+            // Console.Writeline is not needed.
+            Console.Write(str_for_console);
+        }
+        /// <summary>
+        /// Accepts: object[]
+        /// 2023-08-01 15:21
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arr_in"></param>
+        /// <returns></returns>
+        public static Int32[] ConvertToInt32(object[] arr_in)
+        {
+            Int32[] arr_out = new Int32[arr_in.Length];
+            for (Int32 i = 0; i < arr_out.Length; i++)
+            {
+                try
+                {
+                    arr_out[i] = (int)arr_in[i];
+                }
+                catch
+                {
+                    ReportFunctions.ReportError("Cast failed at " + i.ToString());
+                }
+            }
+            return arr_out;
+        }
+        /// <summary>
+        /// Tested. Works. 2024.02.14 13:22. Warsaw. Workplace. 
+        /// </summary>
+        /// <param name="arr_in"></param>
+        /// <returns></returns>
+        public static Int32 Average(Int32[] arr_in)
+        {
+            // 2024.02.14 13:22. Warsaw. Workplace. 
+            // need long[] because there were overflow of Int32 because of a lot of large numbers.
+            long[] arr_long = new long[arr_in.Length];
+            Array.Copy(arr_in, arr_long, arr_long.Length);
+            return (int)(arr_long.Sum() / (long)arr_in.Length);
+        }
+        /// <summary>
+        /// Sort array according to provided indexes
+        /// 2023.08.12 12:12
+        /// </summary>
+        /// <param name="arr_in"></param>
+        /// <param name="indexes_in"></param>
+        /// <returns></returns>
+        public static Int32[] Sort(Int32[] arr_in, Int32[] indexes_in)
+        {
+            return ArrayFunctions.Sort(arr_in, indexes_in);
+        }
+        /// <summary>
+        /// Sort AxB array according to indexes provided
+        /// 2023.08.12 12:13
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arr_in"></param>
+        /// <param name="indexes_in"></param>
+        /// <returns></returns>
+        public static Int32[][] Sort(Int32[][] arr_in, Int32[] indexes_in)
+        {
+            return ArrayFunctions.Sort(arr_in, indexes_in);
+        }
+        public static Int32[] Sort(Int32[] arr_in, ArraySortingEnum order_to_sort)
+        {
+            Int32[] arr_out = arr_in;
+            Int32 sort_condition(Int32 num1, Int32 num2)
+            {
+                Int32 res_out = 0;
+                if (num1 > num2)
+                {
+                    return 1;
+                }
+                if (num1 == num2)
+                {
+                    return 0;
+                }
+                if (num1 < num2)
+                {
+                    return -1;
+                }
+                return res_out;
+            }
+            Array.Sort(arr_out, sort_condition);
+            if (order_to_sort == ArraySortingEnum.Descending)
+            {
+                Array.Reverse(arr_out);
+            }
+            return arr_out;
+        }
+        /// <summary>
+        /// Provides change in indexes after sorting
+        /// 2023.08.12 11:07
+        /// </summary>
+        /// <param name="arr_in"></param>
+        /// <param name="order_to_sort"></param>
+        /// <returns></returns>
+        public static Int32[] SortingIndexes(Int32[] arr_in, ArraySortingEnum order_to_sort)
+        {
+            Int32[] arr_to_sort = new Int32[arr_in.Length];
+            Int32[] indexes = new Int32[arr_in.Length];
+            Array.Copy(arr_in, arr_to_sort, arr_in.Length);
+            for (Int32 i = 0; i < indexes.Length; i++)
+            {
+                indexes[i] = i;
+            }
+            for (Int32 i = 0; i < arr_to_sort.Length; i++)
+            {
+                Int32 max_number = arr_to_sort[i];
+                Int32 max_number_index = i;
+                for (Int32 j = i; j < arr_to_sort.Length; j++)
+                {
+                    if (arr_to_sort[j] >= max_number)
+                    {
+                        max_number = arr_to_sort[j];
+                        max_number_index = j;
+                    }
+                }
+                arr_to_sort[max_number_index] = arr_to_sort[i];
+                arr_to_sort[i] = max_number;
+                Int32 index_tmp = indexes[i];
+                indexes[i] = indexes[max_number_index];
+                indexes[max_number_index] = index_tmp;
+            }
+            if (order_to_sort == ArraySortingEnum.Ascenidng)
+            {
+                Array.Reverse(indexes);
+            }
+            return indexes;
+        }
+        /// <summary>
+        /// Sort Int32 array and provides change in indexes
+        /// 2023.08.12 11:04
+        /// </summary>
+        /// <param name="arr_in"></param>
+        /// <param name="sorting_indexes"></param>
+        /// <param name="order_to_sort"></param>
+        /// <returns></returns>
+        public static Int32[] Sort(Int32[] arr_in, out Int32[] sorting_indexes, ArraySortingEnum order_to_sort)
+        {
+            Int32[] arr_out = arr_in;
+            Int32[] indexes = new Int32[arr_in.Length];
+            for (Int32 i = 0; i < arr_out.Length; i++)
+            {
+                indexes[i] = i;
+            }
+            for (Int32 i = 0; i < arr_out.Length; i++)
+            {
+                Int32 max_number = arr_in[i];
+                Int32 max_number_index = i;
+                for (Int32 j = i; j < arr_out.Length; j++)
+                {
+                    if (arr_in[j] >= max_number)
+                    {
+                        max_number = arr_in[j];
+                        max_number_index = j;
+                    }
+                }
+                arr_out[max_number_index] = arr_out[i];
+                arr_out[i] = max_number;
+                Int32 index_tmp = indexes[i];
+                indexes[i] = indexes[max_number_index];
+                indexes[max_number_index] = index_tmp;
+            }
+            if (order_to_sort == ArraySortingEnum.Ascenidng)
+            {
+                Array.Reverse(arr_out);
+                Array.Reverse(indexes);
+            }
+            sorting_indexes = indexes;
+            return arr_out;
+        }
+        /// <summary>
+        /// Prints Int32 Array to console
+        /// 2023.08.12 08:18
+        /// Modified. Added with index. 2024.03.08 15:15. Warsaw. Hostel.
+        /// </summary>
+        /// <param name="arr_in"></param>
+        public static void ToConsole(Int32[] arr_in, bool with_index = false)
+        {
+            if (with_index == false)
+            {
+                Type type = typeof(int);
+                Console.WriteLine("Array " + type.Name.ToString() + ". Length is " + arr_in.Length.ToString());
+                string[] strings_arr = Convert.ToStringArray(arr_in);
+                Console.Write(StringArray.Convert.ToFileString(strings_arr));
+                return;
+            }
+
+            if (with_index == true)
+            {
+                Type type = typeof(int);
+                Console.WriteLine("Array " + type.Name.ToString() + ". Length is " + arr_in.Length.ToString());
+                string[] strings_arr = Convert.ToStringArray(arr_in);
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    Console.Write(i.ToString() + ".\t");
+                    Console.WriteLine(strings_arr[i]);
+                }
+                return;
+            }
+
+
+
+
+
+        }
+
+
+        /// <summary>
+        /// Written. 2024.03.08 15:03. Warsaw. Hostel.
+        /// </summary>
+        public static class Find
+        {
+
+            /// <summary>
+            /// Written. 2024.03.08 15:30. Warsaw. Hostel.
+            /// </summary>
+            public static class ClosestElement
+            {
+
+                /// <summary>
+                /// Find the closest element to provided value in Int32[] and return the value of this element<br></br>
+                /// Written. 2024.03.08 15:33. Warsaw. Hostel. <br></br>
+                /// Tested. Works. 2024.03.08 15:35. Warsaw. Hostel.
+                /// </summary>
+                /// <param name="arr_in"></param>
+                /// <param name="value_in"></param>
+                /// <returns></returns>
+                public static Int32 Value(Int32[] arr_in, Int32 value_in)
+                {
+                    Int32 index_found = ClosestElement.Index(arr_in, value_in);
+                    Int32 int_return = arr_in[index_found];
+                    return int_return;
+                }
+
+
+                /// <summary>
+                /// Find the closest element to provided value in Int32[] and return the index of this element<br></br> 
+                /// Written. 2024.03.08 15:11. Warsaw. Hostel. <br></br>
+                /// Tested. Works. 2024.03.08 15:27. Warsaw. Hostel.
+                /// </summary>
+                /// <param name="arr_in"></param>
+                /// <param name="value_in"></param>
+                /// <returns></returns>
+                public static Int32 Index(Int32[] arr_in, Int32 value_in)
+                {
+                    if (arr_in.Length == 0)
+                    {
+                        ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                        return 0;
+                    }
+
+
+                    Int32 substract_value = arr_in[0] - value_in;
+                    Int32 index_found = 0;
+                    // postive decreases. that value
+                    // negative becomes bigger
+
+                    for (Int32 i = 0; i < arr_in.Length; i++)
+                    {
+                        if (System.Math.Abs(substract_value) > System.Math.Abs(arr_in[i] - value_in))
+                        {
+                            substract_value = arr_in[i] - value_in;
+                            index_found = i;
+                        }
+                    }
+                    return index_found;
+
+
+
+                }
+
+
+            }
+
+        }
+        public static class Math
+        {
+
+            /// <summary>
+            /// Written. 2024.02.09 15:43. Warsaw. Workplace. 
+            /// Tested. Works. 2024.02.09 15:57. Warsaw. Workplace. 
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <returns></returns>
+            public static bool ElementsTheSame(Int32[] arr_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return false;
+                }
+                bool result_out = true;
+                Int32 arr_element_1st = arr_in[0];
+                foreach (Int32 arr_element in arr_in)
+                {
+                    if (arr_element != arr_element_1st)
+                    {
+                        result_out = false;
+                        break;
+                    }
+                }
+
+                return result_out;
+
+            }
+
+            /// <summary>
+            /// Counts how many times each number is used in array. Returns Int32[][]. <br></br>
+            /// 1 index is numbers, 2 index is count <br></br>
+            /// Written. 2024.01.20 22:55. Warsaw. Hostel.
+            /// Tested. Works. 2024.01.21 16:52. Warsaw. Hostel. 
+            /// </summary>
+            public static Int32[][] Distribution(Int32[] arr_in)
+            {
+                Int32[] numbers_of_array = NumbersUsedInArray(arr_in);
+                Int32[] numbers_count = new Int32[numbers_of_array.Length];
+
+                for (Int32 i = 0; i < numbers_of_array.Length; i++)
+                {
+
+                    for (Int32 j = 0; j < arr_in.Length; j++)
+                    {
+                        if (arr_in[j] == numbers_of_array[i])
+                        {
+                            numbers_count[i] += 1;
+                        }
+                    }
+
+                }
+
+                Int32[][] arr_out = new Int32[2][];
+                arr_out[0] = numbers_of_array;
+                arr_out[1] = numbers_count;
+                return arr_out;
+
+            }
+
+
+
+
+
+
+
+            /// <summary>
+            /// Return numbers that are used in the array without repetetion of the same number <br></br>
+            /// Written. 2024.01.20 22:21. Warsaw. Hostel. <br></br>
+            /// Tested. Works. 2024.01.21 16:48. Warsaw. Hostel. 
+            /// </summary>
+            public static Int32[] NumbersUsedInArray(Int32[] arr_in)
+            {
+                List<int> arr_out_list = new List<int>();
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    if (arr_out_list.Contains(arr_in[i]) == false)
+                    {
+                        arr_out_list.Add(arr_in[i]);
+                    }
+                }
+
+                return arr_out_list.ToArray();
+
+            }
+
+
+
+
+
+
+
+
+            /// <summary>
+            /// 2023.10.30 14:19. Written. Warsaw. Workplace. <br></br>
+            /// 2023.10.30 14:22. Tested. Works
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <returns></returns>
+            public static Int32[][] InvertSign(Int32[][] arr_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return arr_in;
+                }
+                Int32[][] arr_out = new Int32[arr_in.Length][];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    arr_out[i] = InvertSign(arr_in[i]);
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// 2023.10.30 13:01. Written. Warsaw. Workplace. <br></br>
+            /// 2023.10.30 13:01. Tested. Works.
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <returns></returns>
+            public static Int32[] InvertSign(Int32[] arr_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return arr_in;
+                }
+                Int32[] arr_out = new Int32[arr_in.Length];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    arr_out[i] = 0;
+                    arr_out[i] = -arr_in[i];
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// Adds Int32 Array to Int32 Array and returns Int32 Array.<br></br>
+            /// 2023.08.01 - 2023.09.01. Written. Warsaw. <br></br>
+            /// 2023.10.30 12:56. Tested. Works.
+            /// </summary>
+            /// <param name="arr_1"></param>
+            /// <param name="arr_2"></param>
+            /// <returns></returns>
+            public static Int32[] Add(Int32[] arr_1, Int32[] arr_2)
+            {
+                if (arr_1.Length != arr_2.Length)
+                {
+                    ReportFunctions.ReportError(arr_1.Length, arr_2.Length, ReportFunctions.ErrorMessage.LengthDifferent);
+                    return arr_1;
+                }
+                Int32[] arr_out = new Int32[arr_1.Length];
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    arr_out[i] = arr_1[i] + arr_2[i];
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// Adds number to Int32 Array and returns Int32 Array.<br></br>
+            /// 2023.08.01 - 2023.09.01. Written. Warsaw. <br></br>
+            /// 2023.10.30 12:47. Tested. Works.
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <param name="number_in"></param>
+            /// <returns></returns>
+            public static Int32[] Add(Int32[] arr_in, Int32 number_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return arr_in;
+                }
+                Int32[] arr_out = new Int32[arr_in.Length];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    arr_out[i] = arr_in[i] + number_in;
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// Adds Int32[][] Array to Int32[][] Array and returns Int32[][] array<br></br>
+            /// 2023.08.01 - 2023.09.01. Written. Warsaw. <br></br>
+            /// 2023.10.30 14:44. Tested. Works.
+            /// </summary>
+            /// <param name="arr_1"></param>
+            /// <param name="arr_2"></param>
+            /// <returns></returns>
+            public static Int32[][] Add(Int32[][] arr_1, Int32[][] arr_2)
+            {
+                if (arr_1.Length != arr_2.Length)
+                {
+                    ReportFunctions.ReportError(arr_1.Length, arr_2.Length, ReportFunctions.ErrorMessage.LengthDifferent);
+                    return arr_1;
+                }
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    if (arr_1[i].Length != arr_2[i].Length)
+                    {
+                        ReportFunctions.ReportError(arr_1.Length, arr_2.Length, ReportFunctions.ErrorMessage.LengthDifferent);
+                        return arr_1;
+                    }
+                }
+                Int32[][] arr_out = new Int32[arr_1.Length][];
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    arr_out[i] = Add(arr_1[i], arr_2[i]);
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// Adds number to Int32[][] and returns Int32[][] array<br></br>
+            /// 2023.08.01 - 2023.09.01. Written. Warsaw. <br></br>
+            /// 2023.10.30 14:42. Tested. Works.
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <param name="number_in"></param>
+            /// <returns></returns>
+            public static Int32[][] Add(Int32[][] arr_in, Int32 number_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return arr_in;
+                }
+                Int32[][] arr_out = new Int32[arr_in.Length][];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    arr_out[i] = Add(arr_in[i], number_in);
+                }
+                return arr_out;
+            }
+            public static Int32[] Multiply(Int32[] arr_1, Int32[] arr_2)
+            {
+                if (arr_1.Length != arr_2.Length)
+                {
+                    ReportFunctions.ReportError(arr_1.Length, arr_2.Length, ReportFunctions.ErrorMessage.LengthDifferent);
+                    return arr_1;
+                }
+                Int32[] arr_out = new Int32[arr_1.Length];
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    arr_out[i] = arr_1[i] * arr_2[i];
+                }
+                return arr_out;
+            }
+            public static Int32[] Multiply(Int32[] arr_in, Int32 number_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return arr_in;
+                }
+                Int32[] arr_out = new Int32[arr_in.Length];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    arr_out[i] = arr_in[i] * number_in;
+                }
+                return arr_out;
+            }
+
+            /// <summary>
+            /// Written. 2024.04.19 15:57. Warsaw. Workplace.
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <param name="number_in"></param>
+            /// <returns></returns>
+            public static Int32[] Multiply(Int32[] arr_in, float number_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return arr_in;
+                }
+                Int32[] arr_out = new Int32[arr_in.Length];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    arr_out[i] = (int)((float)arr_in[i] * number_in);
+                }
+                return arr_out;
+            }
+
+
+
+            public static Int32[][] Multiply(Int32[][] arr_1, Int32[][] arr_2)
+            {
+                if (arr_1.Length != arr_2.Length)
+                {
+                    ReportFunctions.ReportError(arr_1.Length, arr_2.Length, ReportFunctions.ErrorMessage.LengthDifferent);
+                    return arr_1;
+                }
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    if (arr_1[i].Length != arr_2[i].Length)
+                    {
+                        ReportFunctions.ReportError(arr_1.Length, arr_2.Length, ReportFunctions.ErrorMessage.LengthDifferent);
+                        return arr_1;
+                    }
+                }
+                Int32[][] arr_out = new Int32[arr_1.Length][];
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    arr_out[i] = Multiply(arr_1[i], arr_2[i]);
+                }
+                return arr_out;
+            }
+            public static Int32[][] Multiply(Int32[][] arr_in, Int32 number_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return arr_in;
+                }
+                Int32[][] arr_out = new Int32[arr_in.Length][];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    arr_out[i] = Multiply(arr_in[i], number_in);
+                }
+                return arr_out;
+            }
+            public static Int32[] Devide(Int32[] arr_1, Int32[] arr_2)
+            {
+                if (arr_1.Length != arr_2.Length)
+                {
+                    ReportFunctions.ReportError(arr_1.Length, arr_2.Length, ReportFunctions.ErrorMessage.LengthDifferent);
+                    return arr_1;
+                }
+                Int32[] arr_out = new Int32[arr_1.Length];
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    try
+                    {
+                        arr_out[i] = arr_1[i] / arr_2[i];
+                    }
+                    catch
+                    {
+                        ReportFunctions.ReportError(i);
+                        return arr_1;
+                    }
+                }
+                return arr_out;
+            }
+            public static Int32[] Devide(Int32[] arr_in, Int32 number_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return arr_in;
+                }
+                if (number_in == 0)
+                {
+                    ReportFunctions.ReportError("Devide by 0");
+                    return arr_in;
+                }
+                Int32[] arr_out = new Int32[arr_in.Length];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    arr_out[i] = arr_in[i] / number_in;
+                }
+                return arr_out;
+            }
+            public static Int32[][] Devide(Int32[][] arr_1, Int32[][] arr_2)
+            {
+                if (arr_1.Length != arr_2.Length)
+                {
+                    ReportFunctions.ReportError(arr_1.Length, arr_2.Length, ReportFunctions.ErrorMessage.LengthDifferent);
+                    return arr_1;
+                }
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    if (arr_1[i].Length != arr_2[i].Length)
+                    {
+                        ReportFunctions.ReportError(arr_1.Length, arr_2.Length, ReportFunctions.ErrorMessage.LengthDifferent);
+                        return arr_1;
+                    }
+                }
+                Int32[][] arr_out = new Int32[arr_1.Length][];
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    try
+                    {
+                        arr_out[i] = Devide(arr_1[i], arr_2[i]);
+                    }
+                    catch
+                    {
+                        ReportFunctions.ReportError(i);
+                        return arr_1;
+                    }
+                }
+                return arr_out;
+            }
+            public static Int32[][] Devide(Int32[][] arr_in, Int32 number_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return arr_in;
+                }
+                if (number_in == 0)
+                {
+                    ReportFunctions.ReportError("Devide by 0");
+                    return arr_in;
+                }
+                Int32[][] arr_out = new Int32[arr_in.Length][];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    arr_out[i] = Devide(arr_in[i], number_in);
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// Substracts Int32 Array to Int32 Array and returns Int32 Array.<br></br>
+            /// 2023.08.01 - 2023.09.01. Written. Warsaw. <br></br>
+            /// 2023.10.30 16:00. Tested. Works.
+            /// </summary>
+            /// <param name="arr_1"></param>
+            /// <param name="arr_2"></param>
+            /// <returns></returns>
+            public static Int32[] Substract(Int32[] arr_1, Int32[] arr_2)
+            {
+                if (arr_1.Length != arr_2.Length)
+                {
+                    ReportFunctions.ReportError(arr_1.Length, arr_2.Length, ReportFunctions.ErrorMessage.LengthDifferent);
+                    return arr_1;
+                }
+                Int32[] arr_out = new Int32[arr_1.Length];
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    arr_out[i] = arr_1[i] - arr_2[i];
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// Substracts number to Int32 Array and returns Int32 Array.<br></br>
+            /// 2023.08.01 - 2023.09.01. Written. Warsaw. <br></br>
+            /// 2023.10.30 16:01. Tested. Works.
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <param name="number_in"></param>
+            /// <returns></returns>
+            public static Int32[] Substract(Int32[] arr_in, Int32 number_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return arr_in;
+                }
+                Int32[] arr_out = new Int32[arr_in.Length];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    arr_out[i] = arr_in[i] - number_in;
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// Substracts Int32[][] Array to Int32[][] Array and returns Int32[][] array<br></br>
+            /// 2023.08.01 - 2023.09.01. Written. Warsaw. <br></br>
+            /// 2023.10.30 16:04. Tested. Works.
+            /// </summary>
+            /// <param name="arr_1"></param>
+            /// <param name="arr_2"></param>
+            /// <returns></returns>
+            public static Int32[][] Substract(Int32[][] arr_1, Int32[][] arr_2)
+            {
+                if (arr_1.Length != arr_2.Length)
+                {
+                    ReportFunctions.ReportError(arr_1.Length, arr_2.Length, ReportFunctions.ErrorMessage.LengthDifferent);
+                    return arr_1;
+                }
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    if (arr_1[i].Length != arr_2[i].Length)
+                    {
+                        ReportFunctions.ReportError(arr_1.Length, arr_2.Length, ReportFunctions.ErrorMessage.LengthDifferent);
+                        return arr_1;
+                    }
+                }
+                Int32[][] arr_out = new Int32[arr_1.Length][];
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    arr_out[i] = Substract(arr_1[i], arr_2[i]);
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// Substracts number to Int32[][] and returns Int32[][] array<br></br>
+            /// 2023.08.01 - 2023.09.01. Written. Warsaw. <br></br>
+            /// 2023.10.30 16:02. Tested. Worked.
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <param name="number_in"></param>
+            /// <returns></returns>
+            public static Int32[][] Substract(Int32[][] arr_in, Int32 number_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return arr_in;
+                }
+                Int32[][] arr_out = new Int32[arr_in.Length][];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    arr_out[i] = Substract(arr_in[i], number_in);
+                }
+                return arr_out;
+            }
+            static object[] SubstractObjectArrays(object[] arr_1, object[] arr_2, Type type_in)
+            {
+                object[] arr_out = new object[arr_1.Length];
+                for (Int32 i = 0; i < arr_1.Length; i++)
+                {
+                    if (type_in == typeof(int))
+                    {
+                        arr_out[i] = (int)arr_1[i] - (int)arr_2[i];
+                    }
+                    if (type_in == typeof(short))
+                    {
+                        arr_out[i] = (short)arr_1[i] - (short)arr_2[i];
+                    }
+                    if (type_in == typeof(byte))
+                    {
+                        arr_out[i] = (byte)arr_1[i] - (byte)arr_2[i];
+                    }
+                    if (type_in == typeof(float))
+                    {
+                        arr_out[i] = (float)arr_1[i] - (float)arr_2[i];
+                    }
+                }
+                return arr_out;
+            }
+        }
+        public static class Convert
+        {
+
+            /// <summary>
+            /// Converts array to filestring according to required number format, delimer and missing number string (defined by char). <br></br> 
+            /// Written. 2024.03.21 11:15. Warsaw. Workplace. <br></br>
+            /// Tested. Works. 2024.03.21 11:27. Warsaw. Workplace. <br></br> 
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <param name="num_per_row"></param>
+            /// <param name="delimer"></param>
+            /// <param name="missing_number_char">Defines missing number string. The string will be of the length of the longest number with this char</param>
+            /// <param name="base_in"></param>
+            /// <param name="pad_number"></param>
+            /// <returns></returns>
+            public static string ToFileString(Int32[] arr_in, int num_per_row, int base_in = 10, string delimer = "\t", char missing_number_char = '.', int pad_number = -1)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return "";
+                }
+
+                int rows_num = arr_in.Length / num_per_row;
+                bool IsNotRectangle = false;
+                if ((arr_in.Length % num_per_row) != 0)
+                {
+                    rows_num += 1;
+                    IsNotRectangle = true;
+                }
+
+                string[] strings_filestring = new string[rows_num];
+
+                StringBuilder write_string = new StringBuilder();
+
+                int col_index = 0;
+
+                int pad_length = pad_number;
+
+                if (base_in == 10)
+                {
+                    if (pad_number == -1)
+                    {
+                        int max_int = arr_in.Max();
+                        int min_int = arr_in.Min();
+                        pad_length = min_int.ToString().Length;
+                        if (max_int.ToString().Length > min_int.ToString().Length)
+                        {
+                            pad_length = max_int.ToString().Length;
+                        }
+                    }
+                }
+
+                if (base_in == 16)
+                {
+                    pad_length = 8;
+                }
+
+                for (int i = 0; i < arr_in.Length; i++)
+                {
+                    if (base_in == 10)
+                    {
+                        write_string.Append(System.Convert.ToString(arr_in[i], base_in).ToUpper().PadRight(pad_length, ' '));
+                    }
+                    if (base_in == 16)
+                    {
+                        write_string.Append(System.Convert.ToString(arr_in[i], base_in).ToUpper().PadLeft(pad_length, '0'));
+                    }
+                    write_string.Append(delimer);
+                    col_index += 1;
+                    if (col_index > (num_per_row - 1))
+                    {
+                        write_string.Append("\r\n");
+                        col_index = 0;
+                    }
+                }
+
+                if (IsNotRectangle == true)
+                {
+                    int row_filled = arr_in.Length % num_per_row;
+                    for (int i = 0; i < (num_per_row - row_filled); i++)
+                    {
+                        write_string.Append("".PadRight(pad_length, missing_number_char));
+                        write_string.Append(delimer);
+                        write_string.Append("\r\n");
+                    }
+                }
+
+                string return_string = write_string.ToString();
+
+                return return_string;
+
+            }
+
+
+            /// <summary>
+            /// Written. 2023.11.05 13:26. Gdansk. Home. <br></br>
+            /// Tested. Works. 2023.11.05 13:33. Gdansk. Home. 
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <returns></returns>
+            public static char[] ToCharArray(Int32[] arr_in)
+            {
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return new char[0];
+                }
+                char[] arr_out = Array.ConvertAll(arr_in, Int32ToChar);
+                char Int32ToChar(Int32 number)
+                {
+                    return System.Convert.ToChar(number);
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// 2023.08.29 10:39. written. <br></br>
+            /// 2023.08.29 10:39. tested. works. <br></br>
+            /// what if the number > 255 ? 2023.12.14 12:36. Workplace
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <returns></returns>
+            public static byte[] ToByteArray(Int32[] arr_in)
+            {
+                byte[] arr_out = Array.ConvertAll(arr_in, Int32ToByte);
+                byte Int32ToByte(Int32 number)
+                {
+                    return System.Convert.ToByte(number);
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// 2023.08.29 10:39. written.
+            /// 2023.08.29 10:39. not checked.
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <returns></returns>
+            public static byte[][] ConvertToByteArray(Int32[][] arr_in)
+            {
+                byte[][] arr_out = new byte[arr_in.Length][];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    arr_out[i] = ToByteArray(arr_in[i]);
+                }
+                return arr_out;
+            }
+            /// <summary>
+            /// not tested
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <returns></returns>
+            public static string[] ToStringArray(Int32[] arr_in)
+            {
+                // space for code. start.
+                if (arr_in.Length == 0)
+                {
+                    ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                    return new string[0];
+                }
+                string[] arr_out = new string[arr_in.Length];
+                for (Int32 i = 0; i < arr_in.Length; i++)
+                {
+                    try
+                    {
+                        arr_out[i] = System.Convert.ToString(arr_in[i]);
+                    }
+                    catch
+                    {
+                        ReportFunctions.ReportError(i);
+                    }
+                }
+                // space for code. end.
+                return arr_out;
+            }
+
+        }
+
+
+        /// <summary>
+        /// Written. 2024.05.20 17:21. Warsaw. Workplace 
+        /// </summary>
+
+        public static class TwoDimensions
+        {
+
+            /// <summary>
+            /// Written. 2024.05.20 17:21. Warsaw. Workplace.
+            /// </summary>
+            public static class Generate
+            {
+                /// <summary>
+                /// Generate Int32[][] filled with random numbers from min to max number. <br></br>
+                /// Written. 2023.07.10 - 2023.07.20. 10 - 15 o'clock. <br></br>
+                /// Tested. Works. 2023.22.08 15:10. <br></br>
+                /// </summary>
+                /// <param name="numbers_num_x"></param>
+                /// <param name="numbers_num_y"></param>
+                /// <param name="min"></param>
+                /// <param name="max"></param>
+                /// <returns></returns>
+                public static Int32[][] RandomMinMaxValue(Int32 numbers_num_x, Int32 numbers_num_y, Int32 min, Int32 max)
+                {
+                    // Moved to TwoDimensions. 2024.05.20 17:24.Warsaw.Workplace.						
+                    Int32[][] arr_out = new Int32[numbers_num_x][];
+                    for (Int32 i = 0; i < arr_out.Length; i++)
+                    {
+                        arr_out[i] = new Int32[numbers_num_y];
+                        for (Int32 j = 0; j < arr_out[i].Length; j++)
+                        {
+                            arr_out[i][j] = _internal_random.Next(min, max + 1);
+                        }
+                    }
+                    return arr_out;
+                }
+                /// <summary>
+                ///  Generate Int32[][] filled with numbers starting from 0 to (Rows x Cols - 1)<br></br>
+                ///  2023.10.30 13:49. Written.
+                ///  2023.10.30 13:50.
+                /// </summary>
+                /// <param name="numbers_num_x"></param>
+                /// <param name="numbers_num_y"></param>
+                /// <returns></returns>
+                public static Int32[][] WithValueIncreasesBy1(Int32 numbers_num_x, Int32 numbers_num_y)
+                {
+                    Int32[][] arr_out = new Int32[numbers_num_x][];
+                    Int32 num_for_arr = 0;
+                    for (Int32 i = 0; i < arr_out.Length; i++)
+                    {
+                        arr_out[i] = new Int32[numbers_num_y];
+                        for (Int32 j = 0; j < arr_out[i].Length; j++)
+                        {
+                            arr_out[i][j] = num_for_arr;
+                            num_for_arr++;
+                        }
+                    }
+                    return arr_out;
+                }
+            }
+
+
+
+            /// <summary>
+            /// Written. 2024.05.20 17:21. Warsaw. Workplace 
+            /// </summary>
+            public static class Convert
+            {
+
+
+
+
+                /// <summary>
+                /// 2023.08.29 10:39. written.
+                /// 2023.08.29 10:39. not checked.
+                /// </summary>
+                /// <param name="arr_in"></param>
+                /// <returns></returns>
+                public static byte[][] ConvertToByteArray(Int32[][] arr_in)
+                {
+                    byte[][] arr_out = new byte[arr_in.Length][];
+                    for (Int32 i = 0; i < arr_in.Length; i++)
+                    {
+                        arr_out[i] = Int32ArrayFunctions.Convert.ToByteArray(arr_in[i]);
+                    }
+                    return arr_out;
+                }
+                /// <summary>
+                /// not tested
+                /// </summary>
+                /// <param name="arr_in"></param>
+                /// <returns></returns>
+
+                public static class ToStringArray
+                {
+
+                    /// <summary>
+                    /// Written. 2024.05.20 16:49. Warsaw. Workplace 
+                    /// </summary>
+                    /// <param name="arr_in"></param>
+                    /// <param name="add_to_start">0x or can be left empty</param>
+                    /// <param name="padding_with_0"></param>
+                    /// <returns></returns>
+                    public static string[][] ToHEX(Int32[][] arr_in, bool padding_by_zero = true, bool upper_case = true, string add_to_start = "")
+                    {
+                        float execution_time_ms_start = 0;
+                        if (TimeExecutionShow == true)
+                        {
+                            execution_time_ms_start = (float)_time_execution.Elapsed.TotalMilliseconds;
+                        }
+
+
+
+
+                        if (arr_in.Length == 0)
+                        {
+                            ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                            return new string[0][];
+                        }
+
+                        string[][] arr_out = new string[arr_in.Length][];
+                        for (Int32 i = 0; i < arr_in.Length; i++)
+                        {
+                            arr_out[i] = new string[arr_in[i].Length];
+                            for (Int32 j = 0; j < arr_in[i].Length; j++)
+                            {
+                                try
+                                {
+                                    arr_out[i][j] = System.Convert.ToString(arr_in[i][j], 16);
+                                    if (padding_by_zero == true)
+                                    {
+                                        if (upper_case == true)
+                                        {
+                                            arr_out[i][j] = arr_out[i][j].PadLeft(8, '0').ToUpper();
+                                            if (add_to_start != "")
+                                            {
+                                                arr_out[i][j] += add_to_start;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            arr_out[i][j] = arr_out[i][j].PadLeft(8, '0').ToLower();
+                                            if (add_to_start != "")
+                                            {
+                                                arr_out[i][j] += add_to_start;
+                                            }
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    ReportFunctions.ReportError(i, j);
+                                }
+                            }
+                        }
+                        if (TimeExecutionShow == true)
+                        {
+                            float execution_time_ms_stop = (float)_time_execution.Elapsed.TotalMilliseconds;
+                            TimeExecutionMessage(nameof(TwoDimensions.Convert.ToStringArray.ToHEX), execution_time_ms_stop - execution_time_ms_start);
+                        }
+                        return arr_out;
+                    }
+
+
+
+                    public static string[][] ToDecimal(Int32[][] arr_in, bool padding = true, bool right_padding = true)
+                    {
+                        // space for code. start.
+                        if (arr_in.Length == 0)
+                        {
+                            ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.ArrayZeroLength);
+                            return new string[0][];
+                        }
+
+                        // 2024.05.20 16:44. Warsaw. Workplace. Added.
+                        int padding_length = 0;
+                        if (padding == true)
+                        {
+                            Int32[] max_of_column = new Int32[arr_in.Length];
+                            Int32[] min_of_column = new Int32[arr_in.Length];
+                            for (int i = 0; i < arr_in.Length; i++)
+                            {
+                                max_of_column[i] = arr_in[i].Max();
+                                min_of_column[i] = arr_in[i].Min();
+                            }
+
+                            string max_str = max_of_column.Max().ToString();
+                            string min_str = min_of_column.Min().ToString();
+
+                            padding_length = max_str.Length;
+                            if (min_str.Length > max_str.Length)
+                            {
+                                padding_length = min_str.Length;
+                            }
+                        }
+
+
+
+                        string[][] arr_out = new string[arr_in.Length][];
+                        for (Int32 i = 0; i < arr_in.Length; i++)
+                        {
+                            arr_out[i] = new string[arr_in[i].Length];
+                            for (Int32 j = 0; j < arr_in[i].Length; j++)
+                            {
+                                try
+                                {
+                                    arr_out[i][j] = System.Convert.ToString(arr_in[i][j], 10);
+                                    if (padding == true)
+                                    {
+                                        if (right_padding == true)
+                                        {
+                                            arr_out[i][j] = arr_out[i][j].PadRight(padding_length, ' ');
+                                        }
+                                        else
+                                        {
+                                            arr_out[i][j] = arr_out[i][j].PadLeft(padding_length, ' ');
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    ReportFunctions.ReportError(i, j);
+                                }
+                            }
+                        }
+                        // space for code. end.
+                        return arr_out;
+                    }
+                }
+            }
+
+
+        }
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
     /* 
         2023.09.02 19:50. About array.
         1. 2023.09.02 19:50. assigning array 1 to array 2 means array 2 will have the same
@@ -26,7 +1699,7 @@ namespace ArrayFunctionsNamespace
         4. 2023.09.02 19:58. there is copy function written in array my functions.
         tested. it creates copy of array.
         */
-    static class ArrayFunctions
+    public static class ArrayFunctions
     {
 
         static Random _internal_random = new Random();
