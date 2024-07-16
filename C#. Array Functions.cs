@@ -669,6 +669,22 @@ namespace ArrayFunctionsNamespace
         /// </summary>
         public static class Find
         {
+            /// <summary>
+            /// Returns max value in Int32[][].
+            /// </summary>
+            /// <param name="arr_in"></param>
+            /// <returns></returns>
+            public static Int32 Max(Int32[][] arr_in)
+            {
+                Int32[] max_of_each_column = new Int32[arr_in.Length];
+                for (int i = 0; i < max_of_each_column.Length; i++) 
+                {
+                    max_of_each_column[i] = arr_in[i].Max();
+                }
+                return max_of_each_column.Max();
+                // Written. Warsaw. Workplace. 2024-07-16 15-03. 
+
+            }
 
             /// <summary>
             /// Written. 2024.03.08 15:30. Warsaw. Hostel.

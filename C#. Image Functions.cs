@@ -1234,6 +1234,29 @@ namespace ImageFunctionsNameSpace
         public static class ToBitmap
         {
             /// <summary>
+            /// Creates black and white Bitmap from Int32[][].
+            /// </summary>
+            /// <param name="array_in"></param>
+            /// <returns></returns>
+            public static Bitmap Int32ArrayBlackWhite(Int32[][] array_in)
+            {
+                Bitmap bitmap_return = new Bitmap(array_in.Length, array_in[0].Length);
+                Int32 max_value = Int32ArrayFunctions.Find.Max(array_in);
+                for (int c = 0; c < array_in.Length; c++)
+                {
+                    for (int r = 0; r < array_in[0].Length; r++)
+                    {
+                        byte byte_for_color = (byte)(((float)(array_in[c][r])/(float)max_value)*(float)byte.MaxValue);
+                        bitmap_return.SetPixel(r, c, Color.FromArgb(byte_for_color, byte_for_color, byte_for_color));
+                    }
+                }
+                return bitmap_return;
+                // Written. Warsaw. Workplace. 2024-07-16 15-07. 
+                // Tested. Works. Warsaw. Workplace. 2024-07-16 15-21. 
+            }
+
+
+            /// <summary>
             /// Creates Bitmap with lines and dots at the start and end of each line. <br></br>
             /// Written. Warsaw. Hostel. 2024.04.20 14:59. <br></br>
             /// Tested. Works. Warsaw. Hostel. 2024.04.21 12:25. <br></br>
@@ -1644,6 +1667,20 @@ namespace ImageFunctionsNameSpace
             static Form FormOutput = null;
             static PictureBox PictureBoxOutput = null;
             static Int32 XYOfset = 10;
+
+            /// <summary>
+            /// Shows in PictureBox black and white Bitmap from Int32[][].
+            /// </summary>
+            /// <param name="array_in"></param>
+            /// <param name="form_called_from"></param>
+            public static void FromInt32ArrayBlackWhite(Int32[][] array_in, Form form_called_from)
+            {
+                FromBitmap(ToBitmap.Int32ArrayBlackWhite(array_in), form_called_from);
+                // Written. Warsaw. Workplace. 2024-07-16 15-11. 
+                // Tested. Works. Warsaw. Workplace. 2024-07-16 15-21. 
+            }
+
+
             /// <summary>
             /// Written. 2024.02.25 21:33. Warsaw. Hostel. <br></br>
             /// Tested. Works. 2024.02.25 21:54. Warsaw. Hostel.
