@@ -205,17 +205,26 @@ namespace ArrayFunctionsNamespace
         public static class Generate
         {
 
-            /// <summary>
-            /// Generates Int32[][] with values that form Cone with Square base.
-            /// </summary>
-            /// <param name="array_size"></param>
-            /// <param name="cone_square_size"></param>
-            /// <param name="cone_max_value"></param>
-            /// <param name="points_for_half_value"></param>
-            /// <param name="cone_center_x"></param>
-            /// <param name="cone_center_y"></param>
-            /// <returns></returns>
-            public static Int32[][] ConeWithSquareBase(UInt32 array_size, UInt32 cone_max_value, UInt32 points_for_half_value, UInt32 cone_center_x, UInt32 cone_center_y, bool zero_is_min = true)
+            public static Int32[][] NormalDistribution(UInt32 array_size, UInt32 max_value, UInt32 points_for_1_deviation, UInt32 cone_center_x, UInt32 cone_center_y)
+            {
+                Int32[][] array_out = new Int32[array_size][];
+                return array_out;
+
+
+
+            }
+
+                /// <summary>
+                /// Generates Int32[][] with values that form Cone with Square base.
+                /// </summary>
+                /// <param name="array_size"></param>
+                /// <param name="cone_square_size"></param>
+                /// <param name="cone_max_value"></param>
+                /// <param name="points_for_half_value"></param>
+                /// <param name="cone_center_x"></param>
+                /// <param name="cone_center_y"></param>
+                /// <returns></returns>
+                public static Int32[][] ConeWithSquareBase(UInt32 array_size, UInt32 cone_max_value, UInt32 points_for_half_value, UInt32 cone_center_x, UInt32 cone_center_y, bool zero_is_min = true)
             {
                 Int32[][] array_out = new Int32[array_size][];
                 Int32 value_decrease_per_point = (Int32)(cone_max_value / (points_for_half_value * 2));
