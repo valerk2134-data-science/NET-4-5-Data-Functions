@@ -86,22 +86,85 @@ namespace ArrayFunctionsNamespace
         }
 
 
+        public static Int32[][] Shift(Int32[][] array_in, Int32 column_shift, Int32 row_shift, Int32 missing_value = 0)
+        {
+            Int32[][] array_out = new Int32[array_in.Length][];
+
+            for (int c = 0; c < array_in.Length; c++)
+            {
+                array_out[c] = new Int32[array_in[c].Length];
+                for (int r = 0; r < array_in.Length; r++)
+                {
+                    array_out[c][r] = missing_value;
+                }
+            }
+
+            int c_index = 0;
+            int c_length = 0;
+
+            if (column_shift >= 0)
+            {
+                c_index = column_shift;
+                c_length = array_in.Length;
+            }
+            else
+            {
+                c_index = 0;
+            }
+            // Warsaw. Workplace. 2024-07-17 14-08. 
+            // need i, j for second array.
+            for (int c = c_index; c < c_length; c++)
+            {
+                array_out[c] = new Int32[array_in[c].Length];
+                for (int r = (int)row_shift; r < array_in.Length; r++)
+                {
+                    array_out[c][r] = array_in[c][r];
+                }
+            }
+            return array_out;
+
+            // Written. Warsaw. Workplace. 2024-07-17 13-55. 
+            // not finished.
+
+        }
 
 
 
+        public static class Insert
+        {
+            // Written. Warsaw. Workplace. 2024-07-17 12-55. 
+            public static Int32[][] AInBWithBLevel(Int32[][] array_a, Int32[][] array_b)
+            {
+                Int32[][] array_return = new Int32[array_b.Length][];
+                for (int c = 0; c < array_return.Length; c++)
+                {
+                    array_return[c] = new Int32[array_b[c].Length]; 
+                    for (int r = 0; r < array_return[0].Length; r++)
+                    {
+                        array_return[c][r] = array_a[c][r];
+                        if (array_return[c][r] < array_b[c][r])
+                        {
+                            array_return[c][r] = array_b[c][r];
+                        }
+                    }
+                }
+                return array_return;
+                // Written. Warsaw. Workplace. 2024-07-17 12-59. 
+            }
 
 
+        }
 
 
-        /// <summary>
-        /// Written. 2023.11.08 15:39. Warsaw. Workplace. 
-        /// </summary>
-        /// Note. 2023.11.08 16:12. Warsaw. Workplace. 
-        /// Columns and Rows words to be used and all combinations can be 
-        /// descibed using it.
-        /// Letter description did not work good when
-        /// Int32[][] into 1 array by columns and by rows.
-        public static class Merge
+            /// <summary>
+            /// Written. 2023.11.08 15:39. Warsaw. Workplace. 
+            /// </summary>
+            /// Note. 2023.11.08 16:12. Warsaw. Workplace. 
+            /// Columns and Rows words to be used and all combinations can be 
+            /// descibed using it.
+            /// Letter description did not work good when
+            /// Int32[][] into 1 array by columns and by rows.
+            public static class Merge
         {
 
             /// <summary>
@@ -204,13 +267,62 @@ namespace ArrayFunctionsNamespace
         /// </summary>
         public static class Generate
         {
-
-            public static Int32[][] NormalDistribution(UInt32 array_size, UInt32 max_value, UInt32 points_for_1_deviation, UInt32 cone_center_x, UInt32 cone_center_y)
+            public static Int32[][] NormalDistribution(UInt32 array_size, UInt32 max_value, UInt32 points_of_1_deviation, UInt32 cone_center_x, UInt32 cone_center_y)
             {
                 Int32[][] array_out = new Int32[array_size][];
+                for (int c = 0; c < array_size; c++)
+                {
+                    array_out[c] = new Int32[array_size];
+                    for (int r = 0; r < array_size; r++)
+                    {
+                        int r_distance = r - (int)cone_center_x;
+                        int c_distance = c - (int)cone_center_y;
+                        array_out[c][r] = MathFunctions.Distribution.NormalDistribution(
+                            (int)max_value,
+                            (int)System.Math.Sqrt(System.Math.Pow((double)r_distance, 2) + System.Math.Pow((double)c_distance, 2)),
+                            0, points_of_1_deviation);                    
+                    }
+                }
                 return array_out;
 
+                // Written. Warsaw. Workplace. 2024-07-17 12-05.
+                // Tested. Works. Warsaw. Workplace. 2024-07-17 12-14. 
 
+            }
+
+            public static Int32[][] ConeXYEdgeIsNormalDistribution(UInt32 array_size, UInt32 max_value, UInt32 points_of_1_deviation, UInt32 cone_center_x, UInt32 cone_center_y)
+            {
+                Int32[][] array_out = new Int32[array_size][];
+               
+                // level by Y axis
+                Int32[] y_values = new Int32[array_size];
+                for (int i = 0; i < array_size; i++)
+                {
+                    y_values[i] = MathFunctions.Distribution.NormalDistribution((int)max_value, i, (int)cone_center_y, points_of_1_deviation);
+                }              
+                // level by X axis
+                Int32[] x_values = new Int32[array_size];
+                for (int i = 0; i < array_size; i++)
+                {
+                    x_values[i] = MathFunctions.Distribution.NormalDistribution((int)max_value, i, (int)cone_center_x, points_of_1_deviation);
+                }
+                // filling array
+                for (int c = 0; c < array_size; c++)
+                {
+                    array_out[c] = new Int32[array_size];
+                    for (int r = 0; r < array_size; r++)
+                    {
+                        array_out[c][r] = x_values[r];
+                        if (x_values[r] > y_values[c])
+                        {
+                            array_out[c][r] = y_values[c];
+                        }                        
+                    }
+                }
+                return array_out;
+
+                // Written. Warsaw. Workplace. 2024-07-17 12-05.
+                // Tested. Works. Warsaw. Workplace. 2024-07-17 12-14. 
 
             }
 
@@ -2164,7 +2276,10 @@ namespace ArrayFunctionsNamespace
             }
             return false;
         }
-        public static class Split
+
+        
+
+            public static class Split
         {
             
             
@@ -2367,6 +2482,16 @@ namespace ArrayFunctionsNamespace
             /// <returns></returns>
             public static T[] FromIndexByLength<T>(T[] arr_in, UInt32 index, UInt32 length)
             {
+                if (index + 1 + length > arr_in.Length)
+                {
+                    ReportFunctions.ReportError(ReportFunctions.ErrorMessage.Length_is_exceeded);
+                    T[] error_arr_out = new T[length];
+                    Array.Copy(arr_in, arr_in.Length - length - 1 + 1, error_arr_out, 0, error_arr_out.Length);
+                    return error_arr_out;
+                    // Tested. Works. Warsaw. Workplace. 2024-07-17 17-07.                  
+                }
+                
+                
                 T[] arr_out = new T[length];
                 Array.Copy(arr_in, index, arr_out, 0, arr_out.Length);
                 return arr_out;

@@ -567,44 +567,46 @@ namespace MathFunctionsNamespace
             // Written. Warsaw. Workplace. 2024-07-17 10-59. 
 
             /// <summary>
-            /// Caclulates the value according to nirmal distribution.
+            /// Caclulates the value according to normal distribution.
             /// </summary>
             /// <param name="max_value"></param>
             /// <param name="point"></param>
             /// <param name="math_expectation"></param>
             /// <param name="deviation"></param>
             /// <returns></returns>
-            public static Int32 NormalDistribution(Int32 max_value, Int32 point, Int32 math_expectation, Int32 deviation)
+            public static Int32 NormalDistribution(Int32 max_value, Int32 point, Int32 math_expectation, UInt32 deviation, bool relative_to_max = true)
             {
-                // step by step calculation.
-                // 1. number for exp
-                float distirbution_value = (float)(System.Math.Pow(System.Convert.ToDouble((float)point - (float)math_expectation), 2));
-                distirbution_value = (-distirbution_value) / ((float)2 * (float)System.Math.Pow(System.Convert.ToDouble(deviation), 2));
-                // 2. exp value
-                distirbution_value = (float)System.Math.Exp(System.Convert.ToDouble(distirbution_value));
-                // 3. getting the value
-                distirbution_value = distirbution_value * (float)max_value;
+                float distirbution_value = 0;
+                if (relative_to_max == true)
+                {
+                    // step by step calculation.
+                    // 1. number for exp               
+                    distirbution_value = (float)(System.Math.Pow(System.Convert.ToDouble((float)point - (float)math_expectation), 2));
+                    distirbution_value = (-distirbution_value) / ((float)2 * (float)System.Math.Pow(System.Convert.ToDouble(deviation), 2));
+                    // 2. exp value
+                    distirbution_value = (float)System.Math.Exp(System.Convert.ToDouble(distirbution_value));
+                    // 3. getting the value
+                    distirbution_value = distirbution_value * (float)max_value;
+                }
+                else
+                {
+                    // step by step calculation.
+                    // 1. number for exp
+                    distirbution_value = (float)(System.Math.Pow(System.Convert.ToDouble((float)point - (float)math_expectation), 2));
+                    distirbution_value = (-distirbution_value) / ((float)2 * (float)System.Math.Pow(System.Convert.ToDouble(deviation), 2));
+                    // 2. exp value
+                    distirbution_value = (float)System.Math.Exp(System.Convert.ToDouble(distirbution_value));
+                    // 3. value before exp 
+                    float exp_coefficient = (float)1 / ((float)deviation * (float)System.Math.Sqrt((double)2 * System.Math.PI));
+                    // 4. getting the value
+                    distirbution_value = exp_coefficient * distirbution_value;
+                    distirbution_value = distirbution_value * (float)max_value;
+                }
                 return (Int32)distirbution_value;
-
-                // Warsaw. Workplace. 2024-07-17 11-28. 
-                // The code does not provide max value at x equals math expectation.
-                /*
-                // step by step calculation.
-                // 1. number for exp
-                float distirbution_value = (float)(System.Math.Pow(System.Convert.ToDouble((float)point - (float)math_expectation), 2));
-                distirbution_value = (-distirbution_value) / ((float)2 * (float)System.Math.Pow(System.Convert.ToDouble(deviation), 2));
-                // 2. exp value
-                distirbution_value = (float)System.Math.Exp(System.Convert.ToDouble(distirbution_value));
-                // 3. value before exp 
-                float exp_coefficient = (float)1 / ((float)2 * (float)deviation * (float)System.Math.Sqrt((double)2 * System.Math.PI));
-                // 4. getting the value
-                distirbution_value = exp_coefficient * distirbution_value;
-                distirbution_value = distirbution_value * (float)max_value;
-                return (Int32)distirbution_value;
-                */
+                
 
                 // Written. Warsaw. Workplace. 2024-07-17 11-01.
-                // Tested. Works. Warsaw. Workplace. 2024-07-17 11-31. 
+                // Tested. Works. Warsaw. Workplace. 2024-07-17 11-59. 
             }
 
         }
