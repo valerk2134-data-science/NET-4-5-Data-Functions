@@ -423,6 +423,8 @@ namespace ImageFunctionsNameSpace
             }
             
             /// <summary>
+            /// Need to move draw function somewhere. <br></br>
+            /// <br></br>
             /// Written. Note made in Warsaw. Workplace. 2024.07.03 11:17. 
             /// Note. internal brush and pen for performance increase.
             /// </summary>

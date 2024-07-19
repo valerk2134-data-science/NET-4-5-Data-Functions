@@ -12,58 +12,51 @@ using System.Reflection;
 using System.Drawing;
 using System.Windows.Forms;
 using ImageFunctionsNameSpace;
-
-
-
-
-
 namespace FileFunctionsNamespace
 {
-
     /// <summary>
     /// Written. 2024.06.06 09:24. Warsaw. Workplace.
     /// </summary>
     public class BackUpFile
     {
-        public string FilePath; 
-		public string BackupPath;
-		public void DoBackup()
+        public string FilePath;
+        public string BackupPath;
+        public void DoBackup()
         {
-			if (System.IO.File.Exists(FilePath) == true)
-			{
-                string filename = FileFunctions.FileName.Get(FilePath, false);                
-                System.IO.File.Copy(FilePath, BackupPath + "Backup" + " " 
+            if (System.IO.File.Exists(FilePath) == true)
+            {
+                string filename = FileFunctions.FileName.Get(FilePath, false);
+                System.IO.File.Copy(FilePath, BackupPath + "Backup" + " "
                     + DateTime.Now.ToString("yyyy-MM-dd HH-mm") + " " + filename);
-			}
+            }
             else
             {
                 Console.WriteLine(DateTime.Now.ToString() + "The file does not exist. File:\r\n" + FilePath);
-			}
-		}
+            }
+        }
         Timer TimerBackup = new Timer();
         public int BackupHours = 0;
-		public int BackupMinutes = 0;
-		public int BackupSecond = 0;
-		public void ByTimerStart()
+        public int BackupMinutes = 0;
+        public int BackupSecond = 0;
+        public void ByTimerStart()
         {
             TimerBackup.Interval = (BackupHours * 3600 + BackupMinutes * 60 + BackupSecond) * 1000;
             TimerBackup.Start();
-		}
-		public void ByTimerStop()
-		{
-			TimerBackup.Stop();
-		}
-		public BackUpFile()
+        }
+        public void ByTimerStop()
         {
-			TimerBackup.Tick += TimerBackup_Tick;
-		}
-		private void TimerBackup_Tick(object sender, EventArgs e)
-		{
-			TimerBackup.Stop();
+            TimerBackup.Stop();
+        }
+        public BackUpFile()
+        {
+            TimerBackup.Tick += TimerBackup_Tick;
+        }
+        private void TimerBackup_Tick(object sender, EventArgs e)
+        {
+            TimerBackup.Stop();
             DoBackup();
-			TimerBackup.Start();
-		}
-
+            TimerBackup.Start();
+        }
         // 2024.06.06 09:27. Warsaw. Workplace.
         // There is code. It may be deleted if there is no need in it.
         /*
@@ -102,8 +95,7 @@ namespace FileFunctionsNamespace
 			}
 		}
         */
-	}
-
+    }
     /// <summary>
     /// Written. 2023.11.27 09:13. Warsaw. Workplace. 
     /// </summary>
@@ -1365,7 +1357,6 @@ namespace FileFunctionsNamespace
             return result_out;
         }
     }
-
     // 2024.03.22 13:17. Warsaw. Workplace.
     // Obsolete because there is separate file for this
     [Obsolete]
@@ -1652,15 +1643,10 @@ namespace FileFunctionsNamespace
     /// 2023.09.03 12:54. Naming functions. There are notes. Go to definition. <br></br>
     /// </remarks>
     /// 
-    
     /// 
     static class FileFunctions
     {
         public static Random _internal_random = new Random();
-
-
-
-
         // template for code execution. 2024.03.08 13:36. Warsaw. Hostel.
         /*
         float execution_time_ms_start = 0;
@@ -1674,9 +1660,6 @@ namespace FileFunctionsNamespace
                 TimeExecutionMessage(nameof(function_name_here), execution_time_ms_stop - execution_time_ms_start);
             }
         */
-
-
-
         /// <summary>
         /// Written. 2024.03.08 13:36. Warsaw. Hostel.
         /// </summary>
@@ -1686,7 +1669,6 @@ namespace FileFunctionsNamespace
             {
                 return _time_execution_bool;
             }
-
             set
             {
                 if (value == true)
@@ -1701,28 +1683,23 @@ namespace FileFunctionsNamespace
                     _time_execution.Stop();
                     _time_execution.Reset();
                     return;
-
                 }
             }
         }
-
         static bool _time_execution_bool = false;
-
         static Stopwatch _time_execution = new Stopwatch();
         static Int32 _time_execution_count = 0;
-       /// <summary>
-       /// Added. 2024.03.08 13:37. Warsaw. Hostel.
-       /// </summary>
-       /// <param name="function_name"></param>
-       /// <param name="total_ms_passed"></param>
+        /// <summary>
+        /// Added. 2024.03.08 13:37. Warsaw. Hostel.
+        /// </summary>
+        /// <param name="function_name"></param>
+        /// <param name="total_ms_passed"></param>
         static void TimeExecutionMessage(string function_name, float total_ms_passed)
         {
             _time_execution_count += 1;
             Console.WriteLine(_time_execution_count.ToString() + ". " + DateTime.Now.ToString("HH:mm:ss") + " " + function_name +
                 " exectuion time: " + total_ms_passed.ToString("0.000") + " ms");
         }
-
-
         /// <summary>
         /// Written. 2024.06.06 15:06. Warsaw. Workplace 
         /// </summary>
@@ -1735,7 +1712,7 @@ namespace FileFunctionsNamespace
             /// <returns></returns>
             public static DateTime Created(string filename)
             {
-				FileInfo file_information = new FileInfo(filename);
+                FileInfo file_information = new FileInfo(filename);
                 DateTime datetime_return = DateTime.Now;
                 if (File.Exists(filename) == false)
                 {
@@ -1743,71 +1720,65 @@ namespace FileFunctionsNamespace
                     return datetime_return;
                 }
                 datetime_return = file_information.CreationTime;
-				return datetime_return;
-			}
-
+                return datetime_return;
+            }
             /// <summary>
             /// Written. 2024.06.06 15:12. Warsaw. Workplace 
             /// </summary>
             /// <param name="filename"></param>
             /// <returns></returns>
 			public static DateTime Modified(string filename)
-			{
-				FileInfo file_information = new FileInfo(filename);
-				DateTime datetime_return = DateTime.Now;
-				if (File.Exists(filename) == false)
-				{
-					ReportFunctions.ReportError(ReportFunctions.ErrorMessage.Filepath_Is_Wrong);
-					return datetime_return;
-				}
-				datetime_return = file_information.LastWriteTime;
-				return datetime_return;
-			}
-
+            {
+                FileInfo file_information = new FileInfo(filename);
+                DateTime datetime_return = DateTime.Now;
+                if (File.Exists(filename) == false)
+                {
+                    ReportFunctions.ReportError(ReportFunctions.ErrorMessage.Filepath_Is_Wrong);
+                    return datetime_return;
+                }
+                datetime_return = file_information.LastWriteTime;
+                return datetime_return;
+            }
             /// <summary>
             /// Written. 2024.06.06 15:12. Warsaw. Workplace 
             /// </summary>
             /// <param name="filename"></param>
             /// <returns></returns>
 			public static DateTime Accessed(string filename)
-			{
-				FileInfo file_information = new FileInfo(filename);
-				DateTime datetime_return = DateTime.Now;
-				if (File.Exists(filename) == false)
-				{
-					ReportFunctions.ReportError(ReportFunctions.ErrorMessage.Filepath_Is_Wrong);
-					return datetime_return;
-				}
-				datetime_return = file_information.LastAccessTime;
-				return datetime_return;
-			}
-
+            {
+                FileInfo file_information = new FileInfo(filename);
+                DateTime datetime_return = DateTime.Now;
+                if (File.Exists(filename) == false)
+                {
+                    ReportFunctions.ReportError(ReportFunctions.ErrorMessage.Filepath_Is_Wrong);
+                    return datetime_return;
+                }
+                datetime_return = file_information.LastAccessTime;
+                return datetime_return;
+            }
             /// <summary>
             /// Written. 2024.06.06 15:14. Warsaw. Workplace 
             /// </summary>
             /// <param name="filename"></param>
             /// <returns></returns>
 			public static long Size(string filename)
-			{
-				FileInfo file_information = new FileInfo(filename);
-				long filesize = -1;
-				if (File.Exists(filename) == false)
-				{
-					ReportFunctions.ReportError(ReportFunctions.ErrorMessage.Filepath_Is_Wrong);
-					return filesize;
-				}
-				filesize = file_information.Length;
-				return filesize;
-			}
-		}
-
-
+            {
+                FileInfo file_information = new FileInfo(filename);
+                long filesize = -1;
+                if (File.Exists(filename) == false)
+                {
+                    ReportFunctions.ReportError(ReportFunctions.ErrorMessage.Filepath_Is_Wrong);
+                    return filesize;
+                }
+                filesize = file_information.Length;
+                return filesize;
+            }
+        }
         /// <summary>
         /// Written. 2024.03.08 11:35. Warsaw. Hostel.
         /// </summary>
         public static class ExeFile
         {
-
             /// <summary>        
             /// It is marked obsolete so it can be used accidentally. <br></br>
             /// Use copy code and paste. It is safer. <br></br>
@@ -1828,18 +1799,11 @@ namespace FileFunctionsNamespace
                 Process.Start(Info);
             }
         }
-
-
-
-
         /// <summary>
         /// Written. 2024.01.14 12:50. 2024.01.14 12:50. Warsaw. Hostel 
         /// </summary>
         public static class BinaryFile
         {
-
-
-
             /// <summary>
             /// Written. 2024.01.30 04:08. Warsaw. Hostel.
             /// not tested
@@ -1852,8 +1816,6 @@ namespace FileFunctionsNamespace
                 long size_out = size_1MB_in_bytes * (long)size_in_Mb;
                 return size_out;
             }
-
-
             /// <summary>
             /// Written. 2024.01.14 21:27. Warsaw. Hostel.
             /// not tested.
@@ -1866,30 +1828,22 @@ namespace FileFunctionsNamespace
                 // There is table using approach.
                 // Finding size is done using calculation.
                 long size_in_bytes = 1;
-
                 for (Int32 i = 0; i < 10; i++)
                 {
                     size_in_bytes = size_in_bytes * 2;
                 }
-
                 long size_out = 0;
                 for (Int32 i = 0; i < size_in_kb; i++)
                 {
                     size_out += size_in_bytes;
                 }
-
                 return (int)size_out;
-
             }
-
-
             /// <summary>
             /// Written. 2024.01.14 12:51. Warsaw. Hostel
             /// </summary>
             public static class Generate
             {
-
-
                 /// <summary>
                 /// Creates binary file of defined size with random value in each byte <br></br>
                 /// Written. 2024.01.14 13:00. Warsaw. Hostel <br></br>
@@ -1906,13 +1860,10 @@ namespace FileFunctionsNamespace
                     {
                         bytes_of_file[i] = (byte)_internal_random.Next(0, byte.MaxValue + 1);
                     }
-
                     FileStream file_write = File.Create(file_path);
                     file_write.Write(bytes_of_file, 0, bytes_of_file.Length);
                     file_write.Close();
-
                 }
-
                 /// <summary>
                 /// Creates file of certain size with bytes from 0 to 255. <br></br>
                 /// Written. 2024.02.06 16:18. Warsaw. Workplace. <br></br>
@@ -1933,26 +1884,19 @@ namespace FileFunctionsNamespace
                             byte_value = 0;
                         }
                     }
-
                     FileStream file_write = File.Create(file_path);
                     file_write.Write(bytes_of_file, 0, bytes_of_file.Length);
-
                     // added Flush() for SD. 2024.02.06 16:42. Warsaw. Workplace. 
                     file_write.Flush();
                     file_write.Close();
-
-
                 }
             }
         }
-
-
         /// <summary>
         /// Written. 2024.02.09 20:31. Warsaw. Hostel 
         /// </summary>
         public static class ImageFile
         {
-
             /// <summary>
             /// Written. 2024.03.12 10:36. Warsaw. Workplace. 
             /// </summary>
@@ -1965,7 +1909,6 @@ namespace FileFunctionsNamespace
                     {
                         execution_time_ms_start = (float)_time_execution.Elapsed.TotalMilliseconds;
                     }
-
                     Bitmap[] bitmap_arr_out = new Bitmap[filenames.Length];
                     for (Int32 i = 0; i < filenames.Length; i++)
                     {
@@ -1976,17 +1919,63 @@ namespace FileFunctionsNamespace
                         float execution_time_ms_stop = (float)_time_execution.Elapsed.TotalMilliseconds;
                         TimeExecutionMessage(nameof(FilesBMPToBitmapArray), execution_time_ms_stop - execution_time_ms_start);
                     }
-
-
                     return bitmap_arr_out;
                 }
             }
-
-                /// <summary>
-                /// Written. 2024.03.12 10:34. Warsaw. Workplace. 
-                /// </summary>
-                public static class ReadFile
+            /// <summary>
+            /// Written. 2024.03.12 10:34. Warsaw. Workplace. 
+            /// </summary>
+            public static class ReadFile
             {
+                /// <summary>
+                /// Converts chart in BMP file into Int32[]. <br></br>
+                /// 1. It removes start and end spaces with no chart. <br></br>
+                /// 2. It removes no chart at the top. The max of chart in by the line. <br></br>
+                /// 3. It leaves no chart at the bottom because it is zero level. <br></br>
+                /// </summary>
+                /// <param name="bmp_filepath"></param>
+                /// <param name="color_of_line"></param>
+                /// <returns></returns>
+                static public Int32[] ChartToInt32Array(string bmp_filepath, Color color_of_line)
+                {
+                    Bitmap bitmap_of_file = FileBMPToBitmap(bmp_filepath);
+                    Int32[][] colors_of_image_int32 = ImageFunctions.Convert.BitmapToInt32ArrayAxB(bitmap_of_file);
+                    Int32 linecolor_int32 = color_of_line.ToArgb();
+                    // finding start value
+                    int start_point = 0;
+                    for (int i = 0; i < colors_of_image_int32.Length; i++)
+                    {
+                        if (colors_of_image_int32[i].Contains(linecolor_int32) == true)
+                        {
+                            start_point = i;
+                            break;
+                        }
+                    }
+                    // finding end value
+                    int end_point = 0;
+                    for (int i = colors_of_image_int32.Length - 1; i >= 0; i--)
+                    {
+                        if (colors_of_image_int32[i].Contains(linecolor_int32) == true)
+                        {
+                            end_point = i;
+                            break;
+                        }
+                    }
+                    int arr_size = end_point - start_point + 1;
+                    Int32[] array_return = new Int32[arr_size];
+                    int ifill = 0;
+                    // filling array
+                    // Warsaw. Workplace. 2024-07-19 14:49.
+                    // note on <=. It's index.
+                    for (int i = start_point; i <= end_point; i++)
+                    {
+                        array_return[ifill] = colors_of_image_int32[i].Length - 1 - Array.IndexOf(colors_of_image_int32[i], linecolor_int32);
+                        ifill += 1;
+                    }
+                    return array_return;
+                    // Written. Warsaw. Workplace. 2024-07-19 14:23. 
+                    // Tested. Works. Warsaw. Workplace. 2024-07-19 14:58. 
+                }
                 /// <summary>
                 /// Tested. Works. 2024.03.06 16:58. Warsaw. Workplace.<br></br>
                 /// It keeps file not available for modification. 2024.03.07 07:52. Warsaw. Workplace. 
@@ -1996,12 +1985,10 @@ namespace FileFunctionsNamespace
                 static public Bitmap FileBMPToBitmap(string filename)
                 {
                     if (System.IO.File.Exists(filename) == false)
-                        {
-                            ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.FileDoesNotExist);
-                            return ImageFunctions.Generate.Rectungular_Checkboard(100, 100);
-                        }
-                        
-                        
+                    {
+                        ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.FileDoesNotExist);
+                        return ImageFunctions.Generate.Rectungular_Checkboard(100, 100);
+                    }
                     float execution_time_ms_start = 0;
                     if (TimeExecutionShow == true)
                     {
@@ -2016,12 +2003,10 @@ namespace FileFunctionsNamespace
                     return bitmap_return;
                 }
             }
-
-
-                /// <summary>
-                /// Written. 2024.02.09 20:33. Warsaw. Hostel 
-                /// </summary>
-                public static class WriteFile
+            /// <summary>
+            /// Written. 2024.02.09 20:33. Warsaw. Hostel 
+            /// </summary>
+            public static class WriteFile
             {
                 /// <summary>
                 /// Saves Bitmap to file .bmp. <br></br>
@@ -2035,9 +2020,7 @@ namespace FileFunctionsNamespace
                     bitmap_in.Save(filename);
                 }
             }
-
         }
-
         /// <summary>
         /// 2023.09.09. written.
         /// 2023.09.09 12:43. this will be used I expect with filename.
@@ -2080,7 +2063,6 @@ namespace FileFunctionsNamespace
                     return str_to_return;
                 }
             }
-
             /// <summary>
             /// Written. 2024.02.17 14:47. Warsaw. Hostel.
             /// Tested. Works. 2024.02.17 14:56. Warsaw. Hostel.
@@ -2091,8 +2073,6 @@ namespace FileFunctionsNamespace
                 string filepath = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName;
                 return FileName.Get(filepath, no_extension);
             }
-
-
             /// <summary>
             /// Return filename with or without extension. 
             /// 2023.09.09 12:18. tested.
@@ -2117,7 +2097,6 @@ namespace FileFunctionsNamespace
                         ReportFunctions.ReportError("Extension of file is null");
                     }
                 }
-
                 return str_to_return;
             }
         }
@@ -2128,7 +2107,6 @@ namespace FileFunctionsNamespace
         {
             return FileName.Get(file_path, no_txt_end);
         }
-
         /// <summary>
         /// Adds to filename additional string and returns full filepath<br></br>
         /// Tested. Works. 2023.11.30 11:05. Warsaw. Workplace. 
@@ -2185,9 +2163,6 @@ namespace FileFunctionsNamespace
                 System.IO.File.Delete(file_path);
             }
         }
-
-      
-
         /// <summary>
         /// Deletes file and changes bytes to random bytes before deletetion.
         /// Written. 2024.03.08 13:19. Warsaw. Hostel. <Br></Br>
@@ -2197,28 +2172,19 @@ namespace FileFunctionsNamespace
         /// <param name="file_path"></param>
         static public void FileDeleteSecured(string file_path)
         {
-
-
             if (System.IO.File.Exists(file_path) == false)
             {
                 ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.WrongPath);
                 return;
             }
-
             float execution_time_ms_start = 0;
             if (TimeExecutionShow == true)
             {
                 execution_time_ms_start = (float)_time_execution.Elapsed.TotalMilliseconds;
             }
-
-
-           
-
             System.IO.FileStream file_read = File.Open(file_path, FileMode.Open);
             long filesize = file_read.Length;
             file_read.Close();
-
-
             byte[] bytes_of_file = new byte[filesize];
             for (Int32 i = 0; i < bytes_of_file.Length; i++)
             {
@@ -2227,34 +2193,28 @@ namespace FileFunctionsNamespace
             // it overwrites file. 2024.03.08 11:10. Warsaw. Hostel.
             // note. it uses the same location of file for new file.
             System.IO.FileStream file_write = File.Create(file_path);
-
             file_write.Write(bytes_of_file, 0, bytes_of_file.Length);
             file_write.Close();
             FileDelete(file_path);
-
             if (TimeExecutionShow == true)
             {
                 float execution_time_ms_stop = (float)_time_execution.Elapsed.TotalMilliseconds;
                 TimeExecutionMessage(nameof(FileDeleteSecured), execution_time_ms_stop - execution_time_ms_start);
             }
-
-
         }
-
         public static class TextFile
         {
-			/// MyFileFunctions can be used via writing using, Size may be from other class.
-			/// Size is used in another class, Read is used in anothe class.
-			/// There is therefore FileSize, FileRead
-			/// 
-			/// Notes.
-			///	1. There is also size of string, size of text while FileSize is amount of lines.
-			/// 2. Read. It may be ok but there is:
-			/// - read 1 string (1 line of text). 
-			/// - read all text.
-			/// Expectation from Read is array of chars from start to end. 
-			/// FileRead shows that text of file (lines) will be read.
-
+            /// MyFileFunctions can be used via writing using, Size may be from other class.
+            /// Size is used in another class, Read is used in anothe class.
+            /// There is therefore FileSize, FileRead
+            /// 
+            /// Notes.
+            ///	1. There is also size of string, size of text while FileSize is amount of lines.
+            /// 2. Read. It may be ok but there is:
+            /// - read 1 string (1 line of text). 
+            /// - read all text.
+            /// Expectation from Read is array of chars from start to end. 
+            /// FileRead shows that text of file (lines) will be read.
             static public void MergeFiles(string file_1_path, string file_2_path)
             {
                 string file_content = "";
@@ -2263,7 +2223,6 @@ namespace FileFunctionsNamespace
                 file_content += ReadFile.ToFileString(file_2_path);
                 WriteFile.FileStringToFile(file_content, file_1_path);
             }
-
             /// <summary>
             /// 2023.09.27 16:47. written
             /// </summary>
@@ -2361,7 +2320,6 @@ namespace FileFunctionsNamespace
                     file_write.Write(string_in);
                     file_write.Close();
                 }
-
                 /// <summary>
                 /// Written. 2024.01.29 17:22. Warsaw. Workplace.
                 /// 
@@ -2386,7 +2344,6 @@ namespace FileFunctionsNamespace
                         Array.Copy(strings_in, str_in_file, strings_in.Length);
                         WriteFile.StringsToFile(str_in_file, file_path);
                     }
-
                     /// <summary>
                     /// Adds string to the end of file. <br></br>
                     /// Tested. Works. 2024.02.16 14:07. Warsaw. Workplace. <br></br>
@@ -2401,10 +2358,8 @@ namespace FileFunctionsNamespace
                             ReportFunctions.ReportAttention(ReportFunctions.AttentionMessage.NumberIsZero);
                             return;
                         }
-
                         string[] filelines = ReadFile.ToStrings(file_path);
                         string[] str_in_file = null;
-
                         if (amount_add == -1)
                         {
                             str_in_file = new string[filelines.Length + strings_in.Length];
@@ -2413,12 +2368,10 @@ namespace FileFunctionsNamespace
                         {
                             str_in_file = new string[filelines.Length + amount_add];
                         }
-
                         if (filelines.Length > 0)
                         {
                             Array.Copy(filelines, str_in_file, filelines.Length);
                         }
-
                         if (amount_add == -1)
                         {
                             Array.Copy(strings_in, 0, str_in_file, filelines.Length - 1 + 1, strings_in.Length);
@@ -2427,10 +2380,8 @@ namespace FileFunctionsNamespace
                         {
                             Array.Copy(strings_in, 0, str_in_file, filelines.Length - 1 + 1, amount_add);
                         }
-
                         WriteFile.StringsToFile(str_in_file, file_path);
                     }
-
                     /// <summary>
                     /// 
                     /// 
@@ -2457,9 +2408,6 @@ namespace FileFunctionsNamespace
                         WriteFile.StringsToFile(lines_to_file, file_path);
                     }
                 }
-
-
-
                 /// <summary>
                 /// written. 2023.09.09 11:38.
                 /// note. addstring and addstrings or alone addstrings with 1 string to add.
@@ -3751,7 +3699,6 @@ namespace FileFunctionsNamespace
             {
                 FileDelete(file_name);
                 System.IO.FileStream file_write = File.Open(file_name, FileMode.Create);
-                
                 for (Int32 bn = 0; bn < byte_arr.Length; bn++)
                 {
                     file_write.WriteByte(byte_arr[bn]);
@@ -3906,7 +3853,6 @@ namespace FileFunctionsNamespace
                 }
                 return res_for_return;
             }
-
             static class DirectoryMyMethods
             {
                 static public void Make(string dir_path)
@@ -4108,8 +4054,5 @@ namespace FileFunctionsNamespace
                 return for_return;
             }
         }
-
-
-
     }
 }
