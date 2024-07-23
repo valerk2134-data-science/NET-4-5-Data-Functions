@@ -319,14 +319,36 @@ namespace XMLFileFunctionsNamespace
 
         }
 
-        /// <summary>
-        /// Warsaw. Workplace. 2024.07.08 11:32.  <br></br>
-        /// Tested. Works. Warsaw. Workplace. 2024.07.08 11:41. 
-        /// </summary>
-        /// <param name="xml_root"></param>
-        /// <param name="node_name"></param>
-        /// <returns></returns>
-        public static void ChangeNodeText(string xml_filepath, string node_name, string data_in)
+		/// <summary>
+		/// Renames the node.<br></br> 
+		/// Full path after root should be provided. <br></br> 
+		/// 
+		/// was not tested.
+		/// </summary>
+		/// <param name="xml_filepath"></param>
+		/// <param name="node_name"></param>
+		/// <param name="new_name"></param>
+		public static void RenameNode(string xml_filepath, string node_name, string new_name)
+		{
+			XmlDocument xml_doc = LoadFile(xml_filepath);
+			XmlElement xml_root = GetRoot(xml_doc);
+			XmlElement xml_node = GetNode(xml_root, node_name);
+			XmlElement new_node = xml_doc.CreateElement(new_name);
+			new_node.InnerText = xml_node.InnerText;
+            xml_root.InsertBefore(new_node, xml_node);
+            xml_root.RemoveChild(xml_node);
+			SaveFile(xml_doc, xml_filepath);	
+			// Written. Warsaw. Workplace. 2024-07-22 10:54. 
+        }
+
+            /// <summary>
+            /// Warsaw. Workplace. 2024.07.08 11:32.  <br></br>
+            /// Tested. Works. Warsaw. Workplace. 2024.07.08 11:41. 
+            /// </summary>
+            /// <param name="xml_root"></param>
+            /// <param name="node_name"></param>
+            /// <returns></returns>
+            public static void ChangeNodeText(string xml_filepath, string node_name, string data_in)
         {
 			try
 			{
@@ -350,9 +372,9 @@ namespace XMLFileFunctionsNamespace
         /// <param name="xml_root"></param>
         /// <param name="node_name"></param>
         /// <returns></returns>
-        public static XmlNode GetNode(XmlElement xml_root, string node_name)
+        public static XmlElement GetNode(XmlElement xml_root, string node_name)
 		{
-			return xml_root.SelectSingleNode(node_name);
+			return (XmlElement)xml_root.SelectSingleNode(node_name);
 		}
 		/// <summary>
 		/// Return nodes of the root of xml file. <br></br>

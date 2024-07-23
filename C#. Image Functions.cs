@@ -401,6 +401,49 @@ namespace ImageFunctionsNameSpace
         }
 
 
+       
+        /// <summary>
+        /// Written. Note made in Warsaw. Workplace. 2024.07.03 11:10. 
+        /// </summary>
+        public class BarDrawSettings
+        {
+
+            // Note made in Warsaw. Workplace. 2024.07.04 12:13. 
+            // 16 looks ok. not to small and to large.
+
+            public int BarWidth = 9;
+
+            public Color FillColor = Color.MediumSlateBlue;
+            public Color BorderColor = Color.Black;
+            public uint BorderWidth = 1;
+            public bool Border = true;
+
+            
+            public void DrawBar(ref Bitmap bitmap_in, Point point_in)
+            {
+                using (Graphics draw_graphics = Graphics.FromImage(bitmap_in))
+                {
+
+                    // fill
+
+
+                    draw_graphics.FillRectangle(new SolidBrush(FillColor), new Rectangle(new Point(point_in.X - BarWidth / 2, point_in.Y), new Size(BarWidth, point_in.Y)));
+
+
+                    // border
+                    if (Border == true)
+                    {
+                        Pen pen_draw = new Pen(BorderColor, BorderWidth);
+                        pen_draw.Alignment = System.Drawing.Drawing2D.PenAlignment.Inset;
+                        draw_graphics.DrawRectangle(pen_draw, new Rectangle(new Point(point_in.X - BarWidth / 2, point_in.Y), new Size(BarWidth, point_in.Y)));
+                    }
+
+                   
+               
+                }
+            }
+        }
+
         /// <summary>
         /// Written. Note made in Warsaw. Workplace. 2024.07.03 11:10. 
         /// </summary>
@@ -1233,6 +1276,17 @@ namespace ImageFunctionsNameSpace
         /// <summary>
         /// Written. 2024.02.25 22:05. Warsaw. Hostel.
         /// </summary>
+        
+        public static void DrawBitmapBorder(ref Bitmap bitmap_in, UInt32 width, Color color)
+        {
+            using (Graphics graphics_draw =  Graphics.FromImage(bitmap_in)) 
+            {
+                graphics_draw.DrawRectangle(new Pen(color, width), new Rectangle(new Point(0,0), new Size(bitmap_in.Width - 1, bitmap_in.Height - 1)));            
+            }
+            // Written. Warsaw. Workplace. 2024-07-23 11-22. 
+            // Tested. Works. Warsaw. Workplace. 2024-07-23 11-28. 
+        }
+        
         public static class ToBitmap
         {
             /// <summary>
@@ -1310,8 +1364,92 @@ namespace ImageFunctionsNameSpace
                 return bitmap_out;
             }
 
+            /// <summary>
+            /// Draws bars using XY values. It trims the values to min - max by X and by Y.
+            /// </summary>
+            /// <param name="y_values"></param>
+            /// <param name="x_values"></param>
+            /// <param name="SettingsOfBar"></param>
+            /// <param name="pixels_per_x_value"></param>
+            /// <param name="pixels_per_y_value"></param>
+            /// <returns></returns>
+            public static Bitmap XYValuesBars(int[] y_values, int[] x_values, BarDrawSettings SettingsOfBar, UInt32 pixels_per_x_value = 8, UInt32 pixels_per_y_value = 8)
+            {
+                if (y_values.Length != x_values.Length)
+                {
+                    ReportFunctions.ReportError(ReportFunctions.ErrorMessage.LengthDifferent);
+                    Bitmap bitmap_error = Generate.Rectungular_Checkboard(200, 200);
+                    return bitmap_error;
+                }
 
-            public static Bitmap XYValues(int[] y_values, int[] x_values, DotDrawSettings dot_settings, UInt32 pixels_per_x_value = 8, UInt32 pixels_per_y_value = 8)
+                if (SettingsOfBar.BarWidth < 2)
+                {
+                    // need to check
+                    ReportFunctions.ReportError("Point diameter error. Min width and height is 2. Rectangle 1x1 is not drawn");
+                    Bitmap bitmap_error = Generate.Rectungular_Checkboard(200, 200);
+                    return bitmap_error;
+                }
+
+                float execution_time_ms_start = 0;
+                if (TimeExecutionShow == true)
+                {
+                    execution_time_ms_start = (float)_time_execution.Elapsed.TotalMilliseconds;
+                }
+
+
+                // 
+              
+               
+                Int32 max_x = x_values.Max();
+                Int32 max_y = y_values.Max();
+
+                Int32 min_x = x_values.Min();
+                Int32 min_y = y_values.Min();
+
+                Int32 range_y = max_y - min_y;
+
+                Bitmap bitmap_out = new Bitmap((max_x - min_x) * (int)pixels_per_x_value + (int)SettingsOfBar.BarWidth, (max_y - min_y) * (int)pixels_per_y_value);
+                
+                Graphics draw_graphics = Graphics.FromImage(bitmap_out);
+                draw_graphics.DrawLine(Pens.Black, new Point(0, range_y * (int)pixels_per_y_value), new Point(max_x * (int)pixels_per_x_value, range_y * (int)pixels_per_y_value));
+                for (int i = 0; i < y_values.Length; i++)
+                {
+                    // Note made in Moscow. Workplace. 2024-07-22 17:29. 
+                    // there is shift forwards to have bar at 0 x value to be in the Bitmap and there is shift back to start draw this bar
+                    // therefore having this shift to give 0.
+                    int point_x_value = (x_values[i] - min_x) * (int)pixels_per_x_value;
+                    int x_size = SettingsOfBar.BarWidth - 1;
+                    int point_y_value = (range_y - (y_values[i] - min_y)) * (int)pixels_per_y_value;
+                    int y_size = (y_values[i] - min_y) * (int)pixels_per_y_value - 1;
+                    draw_graphics.FillRectangle(new SolidBrush(SettingsOfBar.FillColor), new Rectangle(new Point(point_x_value, point_y_value), new Size(x_size, y_size)));
+                
+
+                    if (SettingsOfBar.Border == true)
+                    {
+                        Pen pen_draw = new Pen(SettingsOfBar.BorderColor, SettingsOfBar.BorderWidth);
+                        pen_draw.Alignment = System.Drawing.Drawing2D.PenAlignment.Inset;
+                        draw_graphics.DrawRectangle(pen_draw, new Rectangle(new Point(point_x_value, point_y_value), new Size(x_size, y_size)));
+                    }
+
+
+
+                }
+
+                if (TimeExecutionShow == true)
+                {
+                    float execution_time_ms_stop = (float)_time_execution.Elapsed.TotalMilliseconds;
+                    TimeExecutionMessage(nameof(ToBitmap.XYValuesBars), execution_time_ms_stop - execution_time_ms_start);
+                }
+
+
+
+                return bitmap_out;
+
+                // Tested. Works. Warsaw. Workplace. 2024-07-23 11-05. 
+
+            }
+
+                public static Bitmap XYValues(int[] y_values, int[] x_values, DotDrawSettings dot_settings, UInt32 pixels_per_x_value = 8, UInt32 pixels_per_y_value = 8)
             {
                 if (y_values.Length != x_values.Length)
                 {
