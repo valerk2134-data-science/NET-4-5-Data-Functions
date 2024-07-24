@@ -379,5 +379,37 @@ namespace DirectoryFunctionsNamespace
                 System.IO.Directory.Delete(dir_path, true);
             }
         }
+
+        static public bool IsEmpty(string dir_path)
+        {
+            bool return_value = false;
+            if (System.IO.Directory.Exists(dir_path) == true)
+            {
+                string[] files_in_dir_all = GetFiles.All(dir_path, true, false, "*.*");
+                if (files_in_dir_all.Length == 0)
+                {
+                    return_value = true;
+                }
+                
+            }
+
+            return return_value;
+            // Written. Warsaw. Workplace. 2024-07-24 12:18. 
+
+        }
+
+            static public void DeleteIfEmpty(string dir_path)
+        {
+            if (System.IO.Directory.Exists(dir_path) == true)
+            {
+                string[] files_in_dir_all = GetFiles.All(dir_path, true, false, "*.*");
+                if (files_in_dir_all.Length == 0)
+                {
+                    System.IO.Directory.Delete(dir_path, true);
+                }
+            }
+            // Written. Warsaw. Workplace. 2024-07-24 11:37. 
+        }
+
     }
 }

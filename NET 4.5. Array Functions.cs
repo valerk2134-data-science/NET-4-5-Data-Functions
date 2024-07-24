@@ -10,6 +10,7 @@ using AudioFileFunctions;
 using NetworkFunctionsNamespace;
 using FileFunctionsNamespace;
 using static ArrayFunctionsNamespace.ArrayFunctions;
+using System.IO;
 
 
 
@@ -5587,13 +5588,14 @@ namespace ArrayFunctionsNamespace
 						// filing array
 						int fill_index = 0;
 						string[] arr_out = new string[str_found];
-						for (int i = 0; i < strings_to_find.Length; i++)
+						for (int i = 0; i < arr_in.Length; i++)
 						{
 							if (Find.IsStringInArray(arr_in, strings_to_find[i]) == true)
 							{
 								arr_out[fill_index] = arr_in[i];
                                 fill_index += 1;
 							}
+                           
 						}
 
 						if (TimeExecutionShow == true)
@@ -5764,6 +5766,25 @@ namespace ArrayFunctionsNamespace
                 public static class EachElement
                 {
                     
+
+                public static class Add
+                {
+                    public static string[] ToStart(string[] arr_in, string string_to_add)
+                    {
+                        string[] arr_out = new string[arr_in.Length];
+                        for (int i = 0; i < arr_out.Length; i++)
+                        {
+                            arr_out[i] = string_to_add + arr_in[i];
+                        }
+                        return arr_out;
+                        // Written. Warsaw. Workplace. 2024-07-23 15-42. 
+                    }
+
+
+
+                    // Written. Warsaw. Workplace. 2024-07-23 15-40. 
+                }
+
                 /// <summary>
                 /// Written. 2024.01.31 12:27. Warsaw. Workplace.  
                 /// </summary>

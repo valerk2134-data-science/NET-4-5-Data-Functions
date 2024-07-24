@@ -1700,11 +1700,50 @@ namespace FileFunctionsNamespace
             Console.WriteLine(_time_execution_count.ToString() + ". " + DateTime.Now.ToString("HH:mm:ss") + " " + function_name +
                 " exectuion time: " + total_ms_passed.ToString("0.000") + " ms");
         }
+
+
+
+
+        public static void Copy(string soure_file, string destination_file)
+        {
+            DirectoryFunctions.Make(System.IO.Path.GetDirectoryName(destination_file));
+            System.IO.File.Copy(soure_file, destination_file);
+            // Written. Warsaw. Workplace. 2024-07-24 10:43. 
+        }
+
+
+
+
+
         /// <summary>
         /// Written. 2024.06.06 15:06. Warsaw. Workplace 
         /// </summary>
         public static class FileInformation
         {
+            /// <summary>
+            /// Checks if the File 1 is different from File 2. <br></br>
+            /// Note. Modified and Size is used for this. Created and Accessed is changed on copy.
+            /// </summary>
+            /// <param name="file1"></param>
+            /// <param name="file2"></param>
+            /// <returns></returns>
+            public static bool IsTheSame(string file1, string file2)
+            {
+                // Warsaw. Workplace. 2024-07-23 17-28. 
+                // Created and accessed is changed on copy.
+                if (Modified(file1) != Modified(file2))
+                {
+                    return false;
+                }
+                if (Size(file1) != Size(file2))
+                {
+                    return false;
+                }
+                return true;
+
+                // Written. Warsaw. Workplace. 2024-07-23 17-29. 
+
+            }
             /// <summary>
             /// Written. 2024.06.06 15:12. Warsaw. Workplace 
             /// </summary>
@@ -1839,6 +1878,12 @@ namespace FileFunctionsNamespace
                 }
                 return (int)size_out;
             }
+
+
+
+
+
+
             /// <summary>
             /// Written. 2024.01.14 12:51. Warsaw. Hostel
             /// </summary>
