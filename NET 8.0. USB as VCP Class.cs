@@ -1,11 +1,8 @@
 ﻿using ArrayFunctionsNamespace;
 using BitsFunctionsNamespace;
 using ReportFunctionsNamespace;
-using System;
 using System.IO.Ports;
 using System.Text;
-using System.Threading;
-using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
 
 namespace USB_as_VCP_Namespace

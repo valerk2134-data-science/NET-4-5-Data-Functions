@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Drawing;
 using System.Windows.Forms;
 using ImageFunctionsNameSpace;
+using Timer = System.Windows.Forms.Timer;
 namespace FileFunctionsNamespace
 {
     /// <summary>

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Net.Http.Headers;
 using ImageFunctionsNameSpace;
 using System.Data.Common;
+using Timer = System.Windows.Forms.Timer;
 
 // The code is available publicly. The default copyright is applied.
 

@@ -5588,11 +5588,11 @@ namespace ArrayFunctionsNamespace
 						// filing array
 						int fill_index = 0;
 						string[] arr_out = new string[str_found];
-						for (int i = 0; i < arr_in.Length; i++)
+						for (int i = 0; i < strings_to_find.Length; i++)
 						{
 							if (Find.IsStringInArray(arr_in, strings_to_find[i]) == true)
 							{
-								arr_out[fill_index] = arr_in[i];
+								arr_out[fill_index] = strings_to_find[i];
                                 fill_index += 1;
 							}
                            

@@ -2289,6 +2289,14 @@ namespace ImageFunctionsNameSpace
                 /// </summary>
                 public static class OfMultipleObjects
                 {
+                    /// <summary>
+                    /// Warsaw. Workplace. 2024-07-25 11:59.
+                    /// 1. Requires horizontal placement of objects. <br></br>
+                    /// 2. Return rectangles of objects without trimming.
+                    /// </summary>
+                    /// <param name="bitmap_in"></param>
+                    /// <param name="color_background"></param>
+                    /// <returns></returns>
                     public static Rectangle[] FromLeftToRight(Bitmap bitmap_in, Color color_background)
                     {
                         List<Rectangle> rect_found = new List<Rectangle>();
