@@ -159,7 +159,7 @@ namespace DatetimeFunctionsNamespace
         {
             FileFunctions.TextFile.StringArrayToFile(DatetimeFunctions.DatetimeArrayToStringArray(array_in), fileName_in);
         }
-        public static void DateTimeArrayNxMToFiles(DateTime[][] array_in, string[] filenames_in = null)
+        public static void DateTimeArrayNxMToFiles(DateTime[][] array_in, string[]? filenames_in = null)
         {
             string[][] str_out_arr = new string[array_in.Length][];
             if (filenames_in == null)
