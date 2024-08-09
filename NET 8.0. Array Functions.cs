@@ -6799,7 +6799,26 @@ namespace ArrayFunctionsNamespace
 
 
 
+                /// <summary>
+                /// Converts byte[] to HEX (ASCII) string.
+                /// </summary>
+                /// <param name="arr_in"></param>
+                /// <returns></returns>
+                public static string ToStringHEX(byte[] arr_in)
+                {
+                    string str_out = "";
+                    StringBuilder str_make = new StringBuilder();
+                    str_make.Capacity = arr_in.Length * 2 * 2;
+                    for (int i = 0; i < arr_in.Length; i++)
+                    {
+                        str_make.Append(System.Convert.ToString(arr_in[i], 16));
+                    }
+                    str_out = str_make.ToString();
+                    return str_out;
 
+                    // Written. Warsaw. Workplace. 2024-08-09 12:54. 
+
+                }
 
                     /// <summary>
                     /// Converts byte[][] to byte[][]

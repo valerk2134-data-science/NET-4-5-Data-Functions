@@ -483,14 +483,39 @@ namespace StringFunctionsNamespace
         /// </summary>
         public static class Convert
         {
+
             /// <summary>
-            /// Written. 2023.11.26 04:02. Warsaw. Hostel 1. 
-            /// Tested. Works. 2023.11.26 10:33. Warsaw. Hostel 1. 
+            /// Converts HEX string (ASCII) to byte[].
             /// </summary>
-            /// <param name="string_in"></param>
-            /// <param name="str_length"></param>
+            /// <param name="str_in"></param>
             /// <returns></returns>
-            static public string[] StringToStrings(string string_in, Int32 str_length)
+            static public byte[] HEXStringToByteArray(string str_in)
+            {
+                byte[] arr_out = new byte[str_in.Length/2];
+                string str_for_byte = "";
+                int ifill = 0;
+                for (int i = 0; i < str_in.Length; i += 1)
+                {
+                    str_for_byte += str_in[i];
+                    i += 1;
+                    str_for_byte += str_in[i];
+                    arr_out[ifill] = System.Convert.ToByte(str_for_byte, 16);
+                    ifill += 1;
+                }
+                return arr_out;
+
+                // Written. Warsaw. Workplace. 2024-08-09 13:00. 
+
+            }
+
+                /// <summary>
+                /// Written. 2023.11.26 04:02. Warsaw. Hostel 1. 
+                /// Tested. Works. 2023.11.26 10:33. Warsaw. Hostel 1. 
+                /// </summary>
+                /// <param name="string_in"></param>
+                /// <param name="str_length"></param>
+                /// <returns></returns>
+                static public string[] StringToStrings(string string_in, Int32 str_length)
             {
                 string[] arr_out = null;
                 Int32 str_num = string_in.Length / str_length;
